@@ -1,9 +1,7 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
+    url: jdbc:mysql://db.park-yh.com:3306/aqc_dev?autoReconnect=true&useSSL=false&serverTimezone=UTC
+#    url: jdbc:mysql://db.park-yh.com:3306/aqc?autoReconnect=true&useSSL=false&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: aqc_dev
+    password: yhcy!@#$
