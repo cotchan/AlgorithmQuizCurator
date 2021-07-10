@@ -4,6 +4,8 @@ import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.model.user.VerifyQuestion;
 import com.yhcy.aqc.repository.user.UserRepository;
 import com.yhcy.aqc.repository.user.VerifyQuestionRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -61,5 +63,10 @@ public class UserService {
             throw new UnexpectedParamException("invalid verify question answer ["+user.getVerifyAnswer()+"]");
 
         //비밀번호 해싱로직 추가!
+        PasswordEncoder pe = new BCryptPasswordEncoder();
+        String encodedPassword = pe.encode(user.getPw());
+        System.out.println(encodedPassword);
+        //비밀번호 확인
+        //System.out.println(pe.matches(user.getPw(), encodedPassword));
     }
 }
