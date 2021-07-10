@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VerifyQuestionRepository extends JpaRepository<VerifyQuestion, Integer> {
 
+    VerifyQuestion findBySeq(Integer seq);
 }

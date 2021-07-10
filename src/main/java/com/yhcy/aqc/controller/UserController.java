@@ -1,5 +1,6 @@
 package com.yhcy.aqc.controller;
 
+import com.yhcy.aqc.repository.user.UserPasswordRepository;
 import com.yhcy.aqc.repository.user.UserRepository;
 import com.yhcy.aqc.repository.user.VerifyQuestionRepository;
 import com.yhcy.aqc.service.user.UnexpectedParamException;
@@ -15,10 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class UserController {
 
     private final UserRepository userRepo;
+    private final UserPasswordRepository userPwRepo;
     private final VerifyQuestionRepository vqRepo;
 
-    public UserController(UserRepository userRepo, VerifyQuestionRepository vqRepo) {
+    public UserController(UserRepository userRepo, UserPasswordRepository userPwRepo, VerifyQuestionRepository vqRepo) {
         this.userRepo = userRepo;
+        this.userPwRepo = userPwRepo;
         this.vqRepo = vqRepo;
     }
 
@@ -35,7 +38,7 @@ public class UserController {
         UserVO newUser = UserVO.builder().id(id).pw(pw).pwConfirm(pwConfirm).nickname(nickname).
                 verifyQuestion(verifyQuestion).verifyAnswer(verifyAnswer).build();
 
-        UserService service = new UserService(userRepo, vqRepo);
+        UserService service = new UserService(userRepo, userPwRepo, vqRepo);
         try {
             service.joinService(newUser);
         } catch (UnexpectedParamException e) {

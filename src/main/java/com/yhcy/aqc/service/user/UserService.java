@@ -1,21 +1,27 @@
 package com.yhcy.aqc.service.user;
 
+import com.yhcy.aqc.model.user.Role;
 import com.yhcy.aqc.model.user.User;
+import com.yhcy.aqc.model.user.UserPassword;
 import com.yhcy.aqc.model.user.VerifyQuestion;
+import com.yhcy.aqc.repository.user.UserPasswordRepository;
 import com.yhcy.aqc.repository.user.UserRepository;
 import com.yhcy.aqc.repository.user.VerifyQuestionRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
 
-    private UserRepository userRepo;
-    private VerifyQuestionRepository vqRepo;
+    private final UserRepository userRepo;
+    private final UserPasswordRepository userPwRepo;
+    private final VerifyQuestionRepository vqRepo;
 
-    public UserService(UserRepository userRepo, VerifyQuestionRepository vqRepo) {
+    public UserService(UserRepository userRepo, UserPasswordRepository userPwRepo, VerifyQuestionRepository vqRepo) {
         this.userRepo = userRepo;
+        this.userPwRepo = userPwRepo;
         this.vqRepo = vqRepo;
     }
 
@@ -54,7 +60,7 @@ public class UserService {
         } catch (Exception e) {
             throw new UnexpectedParamException("invalid verify question index ["+user.getVerifyQuestion()+"]");
         }
-        VerifyQuestion vq = vqRepo.getOne(vqSeq);
+        VerifyQuestion vq = vqRepo.findBySeq(vqSeq);
         if (vq == null)
             throw new UnexpectedParamException("invalid verify question index ["+vq+"]");
 
@@ -62,11 +68,30 @@ public class UserService {
         if (user.getVerifyAnswer() == null || user.getVerifyAnswer().trim().length() == 0)
             throw new UnexpectedParamException("invalid verify question answer ["+user.getVerifyAnswer()+"]");
 
-        //비밀번호 해싱로직 추가!
+        //비밀번호 해싱
         PasswordEncoder pe = new BCryptPasswordEncoder();
         String encodedPassword = pe.encode(user.getPw());
         System.out.println(encodedPassword);
+
         //비밀번호 확인
         //System.out.println(pe.matches(user.getPw(), encodedPassword));
+
+        //insert into table using JPA
+        saveUser(user, vq, encodedPassword);
+    }
+
+    @Transactional
+    public void saveUser(UserVO userVO, VerifyQuestion vq, String encodedPassword) {
+        try {
+            User newUser = User.builder().seq(null).userId(userVO.getId()).nickname(userVO.getNickname())
+                    .verifyQuestion(vq).verifyAnswer(userVO.getVerifyAnswer()).role(Role.USER).build();
+            User resUser = userRepo.save(newUser);
+
+            UserPassword newUserPassword = UserPassword.builder().seq(null).user(resUser).
+                    password(encodedPassword).build();
+            userPwRepo.saveAndFlush(newUserPassword);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
