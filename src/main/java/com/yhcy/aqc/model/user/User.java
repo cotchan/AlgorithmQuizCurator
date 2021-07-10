@@ -22,7 +22,7 @@ public class User extends BaseTimeEntity {
     private String userId;
 
     @Column(nullable = false, name = "nickname")
-    private String nickName;
+    private String nickname;
 
     @OneToOne
     @JoinColumn(nullable = false, name = "verify_question_seq")
@@ -36,10 +36,10 @@ public class User extends BaseTimeEntity {
     private Role role;
 
     @Builder
-    public User(Integer seq, String userId, String nickName, VerifyQuestion verifyQuestion, String verifyAnswer, Role role) {
+    public User(Integer seq, String userId, String nickname, VerifyQuestion verifyQuestion, String verifyAnswer, Role role) {
         this.seq = seq;
         this.userId = userId;
-        this.nickName = nickName;
+        this.nickname = nickname;
         this.verifyQuestion = verifyQuestion;
         this.verifyAnswer = verifyAnswer;
         this.role = role;
