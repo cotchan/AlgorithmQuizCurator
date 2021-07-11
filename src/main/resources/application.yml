@@ -1,7 +1,22 @@
 spring:
+  application:
+    name: algorithm_quiz_curator
   datasource:
     url: jdbc:mysql://db.park-yh.com:3306/aqc_dev?autoReconnect=true&useSSL=false&serverTimezone=UTC
 #    url: jdbc:mysql://db.park-yh.com:3306/aqc?autoReconnect=true&useSSL=false&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: aqc_dev
     password: yhcy!@#$
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+server:
+  port: 8080
+
+jwt:
+  token:
+    header: api_key
+    issuer: algorithm_quiz_curator
+    clientSecret: yhcycyyh
+    expirySeconds: 3600

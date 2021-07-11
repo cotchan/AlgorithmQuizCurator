@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 /**
  * 각 사용자의 권한을 관리할 Enum 클래스
  */
-@Getter
 public enum Role {
 
     GUEST("ROLE_GUEST"),
@@ -18,5 +17,9 @@ public enum Role {
 
     Role(String value) {
         this.value = value;
+    }
+
+    public String value() {
+        return value;
     }
 }

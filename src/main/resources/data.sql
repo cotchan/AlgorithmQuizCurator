@@ -1,0 +1,1 @@
+INSERT INTO user(seq,id,nickname,verify_question_seq,verify_question_answer,role_code,regdate) VALUES (null,'zoroKevin','test001',1,'안알랴쥼','USER',now());
