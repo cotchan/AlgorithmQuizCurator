@@ -15,14 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class UserController {
 
-    private final UserRepository userRepo;
-    private final UserPasswordRepository userPwRepo;
-    private final VerifyQuestionRepository vqRepo;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepo, UserPasswordRepository userPwRepo, VerifyQuestionRepository vqRepo) {
-        this.userRepo = userRepo;
-        this.userPwRepo = userPwRepo;
-        this.vqRepo = vqRepo;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/user/join")
@@ -38,9 +34,8 @@ public class UserController {
         UserVO newUser = UserVO.builder().id(id).pw(pw).pwConfirm(pwConfirm).nickname(nickname).
                 verifyQuestion(verifyQuestion).verifyAnswer(verifyAnswer).build();
 
-        UserService service = new UserService(userRepo, userPwRepo, vqRepo);
         try {
-            service.joinService(newUser);
+            userService.joinService(newUser);
         } catch (UnexpectedParamException e) {
             System.out.println(e.getMessage());
         } catch (Exception e) {
