@@ -3,7 +3,7 @@ package com.yhcy.aqc.service.user;
 import lombok.Getter;
 
 @Getter
-public class UnexpectedParamException extends Exception {
+public class UnexpectedParamException extends RuntimeException {
 
     private String message;
 

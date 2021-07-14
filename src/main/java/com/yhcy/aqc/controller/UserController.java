@@ -7,12 +7,10 @@ import com.yhcy.aqc.service.user.UnexpectedParamException;
 import com.yhcy.aqc.service.user.UserService;
 import com.yhcy.aqc.service.user.UserVO;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -21,25 +19,71 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user/join")
+    @GetMapping("/join")
     public String join() {
         return "/dev-test/user/join.html";
     }
 
+    @GetMapping("/info2")
+    public String info() {
+        return "/dev-test/user/mod.html";
+    }
+
     @ResponseBody
-    @PostMapping("/user/join")
+    @PostMapping("/join")
     public String joinProcess(String id, String pw, @RequestParam("pw_confirm") String pwConfirm, String nickname,
                               @RequestParam("verify_question") String verifyQuestion,
-                              @RequestParam("verify_answer") String verifyAnswer) {
-        UserVO newUser = UserVO.builder().id(id).pw(pw).pwConfirm(pwConfirm).nickname(nickname).
-                verifyQuestion(verifyQuestion).verifyAnswer(verifyAnswer).build();
+                              @RequestParam("verify_answer") String verifyAnswer) throws Exception {
+        UserVO newUser = UserVO.builder()
+                .id(id)
+                .pw(pw)
+                .pwConfirm(pwConfirm)
+                .nickname(nickname)
+                .verifyQuestion(verifyQuestion)
+                .verifyAnswer(verifyAnswer)
+                .build();
 
         try {
             userService.joinService(newUser);
         } catch (UnexpectedParamException e) {
-            System.out.println(e.getMessage());
+            return e.getMessage();
         } catch (Exception e) {
             e.printStackTrace();
+            return "unhandled error";
+        }
+
+        return "success";
+    }
+
+    @ResponseBody
+    @GetMapping("/info")
+    public String getInfoProcess() {
+        return null;
+    }
+
+    @ResponseBody
+    @PostMapping("/info")
+    public String modInfoProcess(String id, String pw, @RequestParam("pw_confirm") String pwConfirm, String nickname,
+                                 @RequestParam("verify_question") String verifyQuestion,
+                                 @RequestParam("verify_answer") String verifyAnswer) throws Exception {
+        UserVO modUser = UserVO.builder()
+                .id(id)
+                .pw(pw)
+                .pwConfirm(pwConfirm)
+                .nickname(nickname)
+                .verifyQuestion(verifyQuestion)
+                .verifyAnswer(verifyAnswer)
+                .build();
+
+        System.out.println(modUser.getId());
+
+        try {
+            userService.modService(modUser);
+        } catch (UnexpectedParamException e) {
+            return e.getMessage();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "unhandled error";
         }
 
         return "success";
