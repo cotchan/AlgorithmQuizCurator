@@ -75,8 +75,6 @@ public class UserController {
                 .verifyAnswer(verifyAnswer)
                 .build();
 
-        System.out.println(modUser.getId());
-
         try {
             userService.modService(modUser);
         } catch (UnexpectedParamException e) {
