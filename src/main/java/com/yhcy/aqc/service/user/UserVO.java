@@ -18,7 +18,6 @@ public class UserVO {
     private String verifyQuestion;
     private String verifyAnswer;
     private Role roleCode;
-    private LocalDateTime regdate;
 
     @Builder
     public UserVO(String id, String pw, String pwConfirm, String nickname,
@@ -51,7 +50,5 @@ public class UserVO {
         this.verifyAnswer = verifyAnswer;
 
         this.roleCode = Role.USER;      //사용자 식별방식이 정해질 필요 있음 접근 시 유저 권한을 어떻게 식별할것인지? JWT?
-
-        this.regdate = LocalDateTime.now();
     }
 }

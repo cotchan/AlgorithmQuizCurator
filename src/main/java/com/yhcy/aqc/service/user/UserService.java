@@ -28,8 +28,22 @@ public class UserService {
         this.vqRepo = vqRepo;
     }
 
+    public UserDTO getInfo(String userId) throws Exception {
+        Optional<User> user = userRepo.findByUserId(userId);
+        if (!user.isPresent())
+            throw new UnexpectedParamException("user ID not found");
+
+        UserDTO userDTO = UserDTO.builder()
+                .id(userId)
+                .nickname(user.get().getNickname())
+                .verifyQuestion(user.get().getVerifyQuestion().getDesc())
+                .verifyAnswer(user.get().getVerifyAnswer())
+                .build();
+        return userDTO;
+    }
+
     @Transactional
-    public void joinService(UserVO userVO) throws Exception {
+    public void join(UserVO userVO) throws Exception {
         //중복된 아이디 제한
         Optional<User> dupTest = userRepo.findByUserId(userVO.getId());
         if (dupTest.isPresent())
@@ -75,7 +89,7 @@ public class UserService {
     }
 
     @Transactional
-    public void modService(UserVO userVO) throws Exception {
+    public void mod(UserVO userVO) throws Exception {
         //인증 질문 변조 확인
         int vqSeq;
         try {
