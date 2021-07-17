@@ -1,5 +1,6 @@
 package com.yhcy.aqc.service.user;
 
+import com.yhcy.aqc.exception.UnexpectedParamException;
 import com.yhcy.aqc.model.user.Role;
 import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.model.user.UserPassword;
@@ -103,12 +104,11 @@ public class UserService {
 
         //유저 조회 후 ID, 닉네임, 비밀번호를 제외한 정보 수정
         Optional<User> user = userRepo.findByUserId(userVO.getId());
-        if (!user.isPresent())
-            throw new UnexpectedParamException("user ID not found");
         user.ifPresent(selectUser -> {
             selectUser.setVerifyQuestion(vq.get());
             selectUser.setVerifyAnswer(userVO.getVerifyAnswer());
         });
+        user.orElseThrow(() -> new UnexpectedParamException("user ID not found"));
         userRepo.save(user.get());
 
         //비밀번호 해싱
