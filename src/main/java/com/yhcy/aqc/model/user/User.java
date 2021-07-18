@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import javax.persistence.*;
 
 @Getter
@@ -24,7 +23,7 @@ public class User extends BaseTimeEntity {
     private String userId;
 
     @Column(nullable = false, name = "nickname")
-    private String nickName;
+    private String nickname;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = true, name = "verify_question_seq")
@@ -43,12 +42,17 @@ public class User extends BaseTimeEntity {
     }
 
     @Builder
-    public User(Integer seq, String userId, String nickName, VerifyQuestion verifyQuestion, String verifyAnswer, Role role) {
+    public User(Integer seq, String userId, String nickname, VerifyQuestion verifyQuestion, String verifyAnswer, Role role) {
         this.seq = seq;
         this.userId = userId;
-        this.nickName = nickName;
+        this.nickname = nickname;
         this.verifyQuestion = verifyQuestion;
         this.verifyAnswer = verifyAnswer;
         this.role = role;
+    }
+
+    public void update(VerifyQuestion verifyQuestion, String verifyAnswer) {
+        this.verifyQuestion = verifyQuestion;
+        this.verifyAnswer = verifyAnswer;
     }
 }
