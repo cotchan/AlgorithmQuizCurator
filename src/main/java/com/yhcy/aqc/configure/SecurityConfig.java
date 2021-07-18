@@ -1,4 +1,4 @@
-package com.yhcy.aqc.config;
+package com.yhcy.aqc.configure;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

@@ -5,3 +5,5 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: aqc_dev
     password: yhcy!@#$
+  jackson:
+    property-naming-strategy: SNAKE_CASE

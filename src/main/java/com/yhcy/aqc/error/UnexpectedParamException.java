@@ -1,4 +1,4 @@
-package com.yhcy.aqc.exception;
+package com.yhcy.aqc.error;
 
 import lombok.AccessLevel;
 import lombok.Getter;

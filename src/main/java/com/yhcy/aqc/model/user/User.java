@@ -6,7 +6,6 @@ import lombok.*;
 import javax.persistence.*;
 
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "user")
@@ -41,5 +40,10 @@ public class User extends BaseTimeEntity {
         this.verifyQuestion = verifyQuestion;
         this.verifyAnswer = verifyAnswer;
         this.role = role;
+    }
+
+    public void update(VerifyQuestion verifyQuestion, String verifyAnswer) {
+        this.verifyQuestion = verifyQuestion;
+        this.verifyAnswer = verifyAnswer;
     }
 }
