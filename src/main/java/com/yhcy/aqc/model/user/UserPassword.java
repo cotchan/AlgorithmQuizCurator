@@ -26,7 +26,7 @@ public class UserPassword extends BaseTimeEntity {
     private String password;
 
     @Builder
-    public UserPassword(int seq, User user, String password) {
+    public UserPassword(Integer seq, User user, String password) {
         this.seq = seq;
         this.user = user;
         this.password = password;
