@@ -1,8 +1,12 @@
 package com.yhcy.aqc.model.user;
 
 import com.yhcy.aqc.model.BaseTimeEntity;
-import lombok.*;
-
+import com.yhcy.aqc.security.Jwt;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.persistence.*;
 
 @Getter
@@ -21,16 +25,21 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, name = "nickname")
     private String nickname;
 
-    @OneToOne
-    @JoinColumn(nullable = false, name = "verify_question_seq")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = true, name = "verify_question_seq")
     private VerifyQuestion verifyQuestion;
 
-    @Column(nullable = false, name = "verify_question_answer")
+    @Column(nullable = true, name = "verify_question_answer")
     private String verifyAnswer;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "role_code")
     private Role role;
+
+    public String newApiToken(Jwt jwt, String[] roles) {
+        Jwt.Claims claims = Jwt.Claims.of(seq, userId, nickName, roles);
+        return jwt.newToken(claims);
+    }
 
     @Builder
     public User(Integer seq, String userId, String nickname, VerifyQuestion verifyQuestion, String verifyAnswer, Role role) {

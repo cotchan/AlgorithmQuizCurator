@@ -16,7 +16,7 @@ public class QuizTag extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Integer;
+    private Integer seq;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_seq")
@@ -27,8 +27,8 @@ public class QuizTag extends BaseTimeEntity {
     private QuizTagType quizTagType;
 
     @Builder
-    public QuizTag(java.lang.Integer integer, Quiz quiz, QuizTagType quizTagType) {
-        Integer = integer;
+    public QuizTag(Integer seq, Quiz quiz, QuizTagType quizTagType) {
+        this.seq = seq;
         this.quiz = quiz;
         this.quizTagType = quizTagType;
     }

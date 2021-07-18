@@ -1,5 +1,6 @@
 package com.yhcy.aqc.service.user;
 
+import lombok.RequiredArgsConstructor;
 import com.yhcy.aqc.controller.ModRequest;
 import com.yhcy.aqc.controller.UserResponse;
 import com.yhcy.aqc.controller.JoinRequest;
@@ -19,18 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+
+@RequiredArgsConstructor
 @Service
 public class UserService {
 
     private final UserRepository userRepo;
     private final UserPasswordRepository userPwRepo;
     private final VerifyQuestionRepository vqRepo;
-
-    public UserService(UserRepository userRepo, UserPasswordRepository userPwRepo, VerifyQuestionRepository vqRepo) {
-        this.userRepo = userRepo;
-        this.userPwRepo = userPwRepo;
-        this.vqRepo = vqRepo;
-    }
 
     public UserResponse getInfo(String userId) throws Exception {
         Optional<User> user = userRepo.findByUserId(userId);
@@ -148,6 +145,17 @@ public class UserService {
                 .password(encodedPassword)
                 .build();
         userPwRepo.saveAndFlush(newUserPassword);
+      
+      
+    }
+      
+    public User login(String userId, String password) {
+        User findUser = userRepository.findByUserId(userId);
+        return findUser;
+    }
+
+    public Optional<User> findById(Integer id) {
+        return userRepository.findById(id);
     }
 
 }
