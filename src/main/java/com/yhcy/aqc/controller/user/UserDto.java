@@ -1,6 +1,5 @@
 package com.yhcy.aqc.controller.user;
 
-
 import com.yhcy.aqc.model.user.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,11 +12,11 @@ public class UserDto {
 
     private String userId;
 
-    private String nickName;
+    private String nickname;
 
     public UserDto(User source) {
         this.seq = source.getSeq();
         this.userId = source.getUserId();
-        this.nickName = source.getNickName();
+        this.nickname = source.getNickname();
     }
 }

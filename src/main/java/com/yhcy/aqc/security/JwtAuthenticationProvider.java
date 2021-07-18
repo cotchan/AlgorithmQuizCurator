@@ -42,7 +42,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     private Authentication processUserAuthentication(AuthenticationRequest request) {
         try {
             //여기에 principal 부분은 email, credentials 부분은 비밀번호입니다.
-            User user = userService.login(request.getPrincipal(), request.getCredentials());
+            User user = userService.login(request.getId(), request.getPassword());
 
             /**
              * 인증 주체를 새로 만들고 있습니다.
@@ -53,7 +53,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
                     // 지금의 JwtAuthenticationToken.principal 부분에는 JwtAuthentication 인스턴스가 set 된다. (아예 새로운 타입) 그래도 문제가 없는 이유는 Object타입이기 때문입니다.
                     // 맨 처음에는(로그인 완료 전) JwtAuthenticationToken.principal 부분은 Email 인스턴스가 set 되어 있었다.
                     //로그인 전과 후의 인증 주체의 타입이 아예 달라지는 것을 나타냅니다.
-                    new JwtAuthenticationToken(new JwtAuthentication(user.getSeq(), user.getUserId(), user.getNickName()), null, createAuthorityList(Role.USER.value()));
+                    new JwtAuthenticationToken(new JwtAuthentication(user.getSeq(), user.getUserId(), user.getNickname()), null, createAuthorityList(Role.USER.value()));
             // JWT 값을 생성한다.
             // 권한은 ROLE_USER 를 부여한다.
             // jwt 토큰에 권한을 부여하는 것입니다. 유저라는 권한을 부여

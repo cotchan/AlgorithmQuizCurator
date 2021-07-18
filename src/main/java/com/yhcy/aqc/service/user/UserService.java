@@ -148,14 +148,21 @@ public class UserService {
       
       
     }
-      
+
+    //FIXME: 삭제 예정
     public User login(String userId, String password) {
-        User findUser = userRepository.findByUserId(userId);
-        return findUser;
+        Optional<User> findUser = userRepo.findByUserId(userId);
+
+        if (findUser.isPresent()) {
+            return findUser.get();
+        } else {
+            throw new UnexpectedParamException("user ID not found");
+        }
     }
 
+    //FIXME: 삭제 예정
     public Optional<User> findById(Integer id) {
-        return userRepository.findById(id);
+        return userRepo.findById(id);
     }
 
 }

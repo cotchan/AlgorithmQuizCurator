@@ -11,21 +11,21 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class AuthenticationRequest {
 
     //UserID에 해당
-    private String principal;
+    private String id;
 
     //password에 해당
-    private String credentials;
+    private String password;
 
-    public AuthenticationRequest(String principal, String credentials) {
-        this.principal = principal;
-        this.credentials = credentials;
+    public AuthenticationRequest(String id, String pw) {
+        this.id = id;
+        this.password = pw;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-                .append("principal", principal)
-                .append("credentials", credentials)
+                .append("id", id)
+                .append("pw", password)
                 .toString();
     }
 }

@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import javax.persistence.*;
 
 @Getter
@@ -37,7 +37,7 @@ public class User extends BaseTimeEntity {
     private Role role;
 
     public String newApiToken(Jwt jwt, String[] roles) {
-        Jwt.Claims claims = Jwt.Claims.of(seq, userId, nickName, roles);
+        Jwt.Claims claims = Jwt.Claims.of(seq, userId, nickname, roles);
         return jwt.newToken(claims);
     }
 

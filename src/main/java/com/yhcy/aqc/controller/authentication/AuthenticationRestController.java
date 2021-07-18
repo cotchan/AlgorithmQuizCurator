@@ -19,18 +19,18 @@ import static com.yhcy.aqc.controller.common.ApiResult.OK;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("user/login")
+@RequestMapping("api/user")
 public class AuthenticationRestController {
 
     private final AuthenticationManager authenticationManager;
 
-    @PostMapping
+    @PostMapping(path = "login")
     public ApiResult<AuthenticationResultDto> authentication(@RequestBody AuthenticationRequest authRequest)
             throws UnauthorizedException {
         try {
 
             //인증 주체 만들기
-            JwtAuthenticationToken authToken = new JwtAuthenticationToken(authRequest.getPrincipal(), authRequest.getCredentials());
+            JwtAuthenticationToken authToken = new JwtAuthenticationToken(authRequest.getId(), authRequest.getPassword());
 
             //만든 인증 주체를 AuthenticationManager에게 위임합니다.
             //AuthenticationManager는 인터페이스이고 실제 구현은 ProviderManager입니다.
