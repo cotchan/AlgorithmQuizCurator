@@ -1,6 +1,5 @@
 package com.yhcy.aqc.controller.user;
 
-import com.yhcy.aqc.controller.UserRestController;
 import com.yhcy.aqc.security.WithMockCustomUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

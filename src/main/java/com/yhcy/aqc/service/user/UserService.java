@@ -1,9 +1,8 @@
 package com.yhcy.aqc.service.user;
 
 import lombok.RequiredArgsConstructor;
-import com.yhcy.aqc.controller.ModRequest;
-import com.yhcy.aqc.controller.UserResponse;
-import com.yhcy.aqc.controller.JoinRequest;
+import com.yhcy.aqc.controller.user.ModRequest;
+import com.yhcy.aqc.controller.user.JoinRequest;
 import com.yhcy.aqc.error.UnexpectedParamException;
 import com.yhcy.aqc.model.user.Role;
 import com.yhcy.aqc.model.user.User;
@@ -29,18 +28,12 @@ public class UserService {
     private final UserPasswordRepository userPwRepo;
     private final VerifyQuestionRepository vqRepo;
 
-    public UserResponse getInfo(String userId) throws Exception {
+    public User getInfo(String userId) throws Exception {
         Optional<User> user = userRepo.findByUserId(userId);
         if (!user.isPresent())
             throw new UnexpectedParamException("user ID not found");
 
-        UserResponse userResponse = UserResponse.builder()
-                .id(userId)
-                .nickname(user.get().getNickname())
-                .verifyQuestion(user.get().getVerifyQuestion().getDesc())
-                .verifyAnswer(user.get().getVerifyAnswer())
-                .build();
-        return userResponse;
+        return user.get();
     }
 
     @Transactional

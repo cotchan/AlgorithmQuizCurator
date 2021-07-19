@@ -1,4 +1,4 @@
-package com.yhcy.aqc.controller;
+package com.yhcy.aqc.controller.user;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -7,14 +7,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserResponse {
+public class UserInfoResponse {
     private String id;
     private String nickname;
     private String verifyQuestion;
     private String verifyAnswer;
 
     @Builder
-    public UserResponse(String id, String nickname, String verifyQuestion, String verifyAnswer) {
+    public UserInfoResponse(String id, String nickname, String verifyQuestion, String verifyAnswer) {
         this.id = id;
         this.nickname = nickname;
         this.verifyQuestion = verifyQuestion;

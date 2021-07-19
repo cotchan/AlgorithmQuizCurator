@@ -1,4 +1,4 @@
-package com.yhcy.aqc.controller;
+package com.yhcy.aqc.controller.user;
 
 import com.yhcy.aqc.service.user.UserService;
 import org.springframework.stereotype.Controller;
@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController_DEV {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController_DEV(UserService userService) {
         this.userService = userService;
     }
 

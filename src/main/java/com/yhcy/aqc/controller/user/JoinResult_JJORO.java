@@ -5,12 +5,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Getter
-public class JoinResult {
+public class JoinResult_JJORO {
 
     private final String apiToken;
-    private final UserDto user;
+    private final UserDto_JJORO user;
 
-    public JoinResult(String apiToken, UserDto user) {
+    public JoinResult_JJORO(String apiToken, UserDto_JJORO user) {
         this.apiToken = apiToken;
         this.user = user;
     }

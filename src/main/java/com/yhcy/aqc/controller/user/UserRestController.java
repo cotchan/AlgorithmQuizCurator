@@ -1,12 +1,12 @@
-package com.yhcy.aqc.controller;
+package com.yhcy.aqc.controller.user;
 
 import com.yhcy.aqc.controller.common.ApiResult;
-import com.yhcy.aqc.controller.user.UserDto;
 import com.yhcy.aqc.error.NotFoundException;
 import com.yhcy.aqc.error.UnexpectedParamException;
 import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.security.JwtAuthentication;
 import com.yhcy.aqc.service.user.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,51 +23,58 @@ public class UserRestController {
     }
 
     @PostMapping("join")
-    public String joinProcess(@RequestBody JoinRequest newUser) {
+    public ApiResult<?> joinProcess(@RequestBody JoinRequest newUser) {
         try {
             userService.join(newUser);
+            return ApiResult.OK("success");
         } catch (UnexpectedParamException e) {
-            return e.getMessage();
+            return ApiResult.ERROR(e, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             e.printStackTrace();
-            return "unhandled error";
+            return ApiResult.ERROR(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return "success";
     }
 
     @GetMapping("info/{userId}")
-    public UserResponse getInfoProcess(@PathVariable("userId") String userId) {
+    public ApiResult<?> getInfoProcess(@PathVariable("userId") String userId) {
         try {
-            return userService.getInfo(userId);
+            User user = userService.getInfo(userId);
+
+            UserInfoResponse userInfoResponse = UserInfoResponse.builder()
+                    .id(userId)
+                    .nickname(user.getNickname())
+                    .verifyQuestion(user.getVerifyQuestion().getDesc())
+                    .verifyAnswer(user.getVerifyAnswer())
+                    .build();
+
+            return ApiResult.OK(userInfoResponse);
         } catch (UnexpectedParamException e) {
-            return null;
+            return ApiResult.ERROR(e, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return ApiResult.ERROR(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("info")
-    public String modInfoProcess(@RequestBody ModRequest modUser) {
+    public ApiResult<?> modInfoProcess(@RequestBody ModRequest modUser) {
         try {
             userService.mod(modUser);
+            return ApiResult.OK("success");
         } catch (UnexpectedParamException e) {
-            return e.getMessage();
+            return ApiResult.ERROR(e, HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             e.printStackTrace();
-            return "unhandled error";
+            return ApiResult.ERROR(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return "success";
     }
 
     //FIXME: 삭제 예정
     @GetMapping(path = "me")
-    public ApiResult<UserDto> me(@AuthenticationPrincipal JwtAuthentication authentication) {
+    public ApiResult<UserDto_JJORO> me(@AuthenticationPrincipal JwtAuthentication authentication) {
         return OK(
                 userService.findById(authentication.seq)
-                        .map(UserDto::new)
+                        .map(UserDto_JJORO::new)
                         .orElseThrow(() -> new NotFoundException(User.class, authentication.seq))
         );
     }
