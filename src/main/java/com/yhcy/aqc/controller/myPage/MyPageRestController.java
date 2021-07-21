@@ -24,10 +24,10 @@ public class MyPageRestController {
     public ApiResult<?> getSolvedProblems(@PathVariable("userId") String userId) {
         try {
             List<String> stateTypes = new ArrayList<>();
-            //stateTypes.add("")
-            return ApiResult.OK(stateService.getQuizByStateAndUserId(stateTypes, userId));
-        } catch (UnexpectedParamException e) {
-            return ApiResult.ERROR(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            stateTypes.add("not_solved");
+            stateTypes.add("solved");
+            //TODO : 실제 API 구현 시 DTO를 반환하도록 바꿔야함!
+            return ApiResult.OK(stateService.getQuizStateByStatesAndUserId(stateTypes, userId, true));
         } catch (Exception e) {
             e.printStackTrace();
             return ApiResult.ERROR(e, HttpStatus.INTERNAL_SERVER_ERROR);
