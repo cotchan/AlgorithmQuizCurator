@@ -6,21 +6,19 @@ import com.yhcy.aqc.error.UnexpectedParamException;
 import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.security.JwtAuthentication;
 import com.yhcy.aqc.service.user.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import static com.yhcy.aqc.controller.common.ApiResult.OK;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("api/user")
 public class UserRestController {
 
     private final UserService userService;
-
-    public UserRestController(UserService userService) {
-        this.userService = userService;
-    }
 
     @PostMapping("join")
     public ApiResult<?> joinProcess(@RequestBody JoinRequest newUser) {
