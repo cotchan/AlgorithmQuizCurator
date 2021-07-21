@@ -28,7 +28,7 @@ public class QuizStateService {
     public List<Quiz> getQuizStateByStatesAndUserId(List<String> stateTypes, String userId, boolean reverse) throws Exception {
         //동적 쿼리 생성
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        //state와 userId를 사용하는 서브쿼리 생성, quiz_seq만 사용하므로 결과 제네릭을 Integer로 지정
+        //state와 userId를 조건에 사용하는 서브쿼리 생성, 결과에 quiz_seq만 사용하므로 결과 제네릭을 Integer로 지정
         CriteriaQuery<Integer> q = cb.createQuery(Integer.class);
         Subquery<Quiz> sq = q.subquery(Quiz.class);
         Root<QuizState> quizState = sq.from(QuizState.class);
@@ -36,7 +36,7 @@ public class QuizStateService {
         //유저 아이디 조건 추가
         Predicate predicateUserId = cb.equal(quizState.get("user").get("userId"), userId);
 
-        //stateTypes의 갯수에 맞에 or 절을 추가
+        //stateTypes의 갯수에 맞게 or 절을 추가
         Predicate predicateStateTypes = null;
         for (String stateType : stateTypes) {
             Predicate predicateStateTypeTemp = cb.equal(quizState.get("quizStateType").get("desc"), stateType);
@@ -53,9 +53,8 @@ public class QuizStateService {
         //서브쿼리를 사용하여 Quiz 테이블과 in 구문으로 비교
         CriteriaQuery<Quiz> q2 = cb.createQuery(Quiz.class);
         Root<Quiz> quiz = q2.from(Quiz.class);
-
-        //reverse - false : 입력한 state 조건에 맞는 결과
-        //reverse - true : 입력한 state 조건을 제외한 나머지 결과
+        //reverse -> false : 입력한 state 조건에 맞는 결과
+        //reverse -> true : 입력한 state 조건을 제외한 나머지 결과
         Predicate predicateQuiz = reverse ? cb.in(quiz.get("seq")).value(sq).not() : cb.in(quiz.get("seq")).value(sq);
         q2.select(quiz).where(predicateQuiz).orderBy(cb.asc(quiz.get("seq")));
 
