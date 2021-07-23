@@ -1,31 +1,30 @@
 package com.yhcy.aqc.service.quiz;
 
+import com.yhcy.aqc.controller.ranking.AccuracyRankingResponse;
+import com.yhcy.aqc.controller.ranking.SolvedRankingResponse;
 import com.yhcy.aqc.model.quiz.Quiz;
 import com.yhcy.aqc.model.quiz.QuizState;
-import com.yhcy.aqc.model.quiz.QuizStateType;
-import com.yhcy.aqc.repository.quiz.QuizRepository;
+import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.repository.quiz.QuizStateRepository;
-import com.yhcy.aqc.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class QuizStateService {
 
-    private final QuizRepository quizRepo;
     private final QuizStateRepository stateRepo;
-    private final UserRepository userRepo;
 
     @PersistenceContext
     private final EntityManager em;
 
-    public List<Quiz> getQuizStateByStatesAndUserId(List<String> stateTypes, String userId, boolean reverse) throws Exception {
+    public List<Quiz> getQuizByStatesAndUserId(List<String> stateTypes, String userId, boolean reverse) throws Exception {
         //동적 쿼리 생성
         CriteriaBuilder cb = em.getCriteriaBuilder();
         //state와 userId를 조건에 사용하는 서브쿼리 생성, 결과에 quiz_seq만 사용하므로 결과 제네릭을 Integer로 지정
@@ -59,5 +58,39 @@ public class QuizStateService {
         q2.select(quiz).where(predicateQuiz).orderBy(cb.asc(quiz.get("seq")));
 
         return em.createQuery(q2).getResultList();
+    }
+
+    public List<SolvedRankingResponse> getRankingBySolved() {
+        List<Object[]> rankingList =  stateRepo.findBySolvedQuantity();
+
+        List<SolvedRankingResponse> result = new ArrayList<>();
+
+        for (Object[] re : rankingList) {
+            SolvedRankingResponse srr = SolvedRankingResponse.builder()
+                    .userId(((User) re[0]).getUserId())
+                    .nickname(((User) re[0]).getNickname())
+                    .solvedCnt((Long) re[1])
+                    .build();
+            result.add(srr);
+        }
+
+        return result;
+    }
+
+    public List<AccuracyRankingResponse> getRankingByAccuracy() {
+        List<Object[]> rankingList =  stateRepo.findByAccuracy();
+
+        List<AccuracyRankingResponse> result = new ArrayList<>();
+
+        for (Object[] re : rankingList) {
+            AccuracyRankingResponse arr = AccuracyRankingResponse.builder()
+                    .userId(((User) re[0]).getUserId())
+                    .nickname(((User) re[0]).getNickname())
+                    .accuracyRatio((Double) re[1])
+                    .build();
+            result.add(arr);
+        }
+
+        return result;
     }
 }
