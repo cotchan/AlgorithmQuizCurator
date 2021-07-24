@@ -1,5 +1,7 @@
 package com.yhcy.aqc.security;
 
+import com.yhcy.aqc.controller.authentication.AuthenticationRequest;
+import com.yhcy.aqc.controller.authentication.AuthenticationResult;
 import com.yhcy.aqc.model.user.Role;
 import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.service.user.UserService;

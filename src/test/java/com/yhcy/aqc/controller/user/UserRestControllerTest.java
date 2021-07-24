@@ -48,9 +48,9 @@ class UserRestControllerTest {
                 .andExpect(handler().handlerType(UserRestController.class))
                 .andExpect(handler().methodName("me"))
                 .andExpect(jsonPath("$.success", is(true)))
-                .andExpect(jsonPath("$.response.seq", is(23)))
-                .andExpect(jsonPath("$.response.userId", is("zoroKevin")))
-                .andExpect(jsonPath("$.response.nickName", is("test001")))
+                .andExpect(jsonPath("$.response.id", is("zoroKevin")))
+                .andExpect(jsonPath("$.response.nickname", is("test001")))
+                .andExpect(jsonPath("$.response.verify_question", is("안알랴쥼")))
         ;
     }
 }

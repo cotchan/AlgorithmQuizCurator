@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface QuizStateTypeRepository extends JpaRepository<QuizStateType, Integer> {
+
+    QuizStateType findByDesc(String desc);
 }

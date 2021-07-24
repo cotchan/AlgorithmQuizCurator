@@ -1,7 +1,6 @@
 package com.yhcy.aqc.controller.authentication;
 
-import com.yhcy.aqc.controller.user.UserDto_JJORO;
-import com.yhcy.aqc.security.AuthenticationResult;
+import com.yhcy.aqc.controller.user.UserInfoResponse;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -15,12 +14,12 @@ public class AuthenticationResultDto {
 
     private String apiToken;
 
-    private UserDto_JJORO user;
+    private UserInfoResponse user;
 
     public AuthenticationResultDto(AuthenticationResult source) {
         BeanUtils.copyProperties(source, this);
 
-        this.user = new UserDto_JJORO(source.getUser());
+        this.user = UserInfoResponse.fromUser(source.getUser());
     }
 
     @Override
