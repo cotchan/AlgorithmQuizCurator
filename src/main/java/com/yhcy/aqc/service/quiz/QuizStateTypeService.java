@@ -1,10 +1,12 @@
 package com.yhcy.aqc.service.quiz;
 
 import com.yhcy.aqc.model.quiz.QuizStateType;
-import com.yhcy.aqc.model.quiz.QuizStateTypeDesc;
+import com.yhcy.aqc.model.quiz.QuizStateTypeEnum;
 import com.yhcy.aqc.repository.quiz.QuizStateTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -12,7 +14,11 @@ public class QuizStateTypeService {
 
     private final QuizStateTypeRepository quizStateTypeRepository;
 
-    QuizStateType findByDesc(QuizStateTypeDesc desc) {
-        return quizStateTypeRepository.findByDesc(desc.value());
+    QuizStateType findByDesc(QuizStateTypeEnum quizStateType) {
+        return quizStateTypeRepository.findByDesc(quizStateType.desc());
+    }
+
+    List<QuizStateType> findByState(QuizStateTypeEnum quizStateType) {
+        return quizStateTypeRepository.findByState(quizStateType.state());
     }
 }

@@ -1,6 +1,7 @@
 package com.yhcy.aqc.repository.quiz;
 
 import com.yhcy.aqc.model.quiz.Quiz;
+import com.yhcy.aqc.model.quiz.QuizState;
 import com.yhcy.aqc.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

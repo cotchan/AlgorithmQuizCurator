@@ -31,6 +31,10 @@ public class QuizState extends BaseTimeEntity {
     @JoinColumn(name = "state_seq")
     private QuizStateType quizStateType;
 
+    public void updateQuizStateType(QuizStateType quizStateType) {
+        this.quizStateType = quizStateType;
+    }
+
     @Builder
     public QuizState(Integer seq, User user, Quiz quiz, QuizStateType quizStateType) {
         this.seq = seq;

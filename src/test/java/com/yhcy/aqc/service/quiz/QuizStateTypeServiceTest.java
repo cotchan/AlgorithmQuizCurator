@@ -1,7 +1,7 @@
 package com.yhcy.aqc.service.quiz;
 
 import com.yhcy.aqc.model.quiz.QuizStateType;
-import com.yhcy.aqc.model.quiz.QuizStateTypeDesc;
+import com.yhcy.aqc.model.quiz.QuizStateTypeEnum;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,11 +17,11 @@ class QuizStateTypeServiceTest {
 
     @Test
     void findByDesc_테스트() {
-        QuizStateType result1 = quizStateTypeService.findByDesc(QuizStateTypeDesc.NOT_SELECTED);
+        QuizStateType result1 = quizStateTypeService.findByDesc(QuizStateTypeEnum.NOT_SELECTED);
         assertThat(result1.getDesc(), is("NOT_SELECTED"));
         assertThat(result1.getState(), is("pns"));
 
-        QuizStateType result2 = quizStateTypeService.findByDesc(QuizStateTypeDesc.SOLVED);
+        QuizStateType result2 = quizStateTypeService.findByDesc(QuizStateTypeEnum.SOLVED);
 
         assertThat(result2.getDesc(), is("SOLVED"));
         assertThat(result2.getState(), is("ps"));
