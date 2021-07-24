@@ -1,9 +1,8 @@
 package com.yhcy.aqc.service.quiz;
 
-import com.yhcy.aqc.controller.ranking.AccuracyRankingResponse;
-import com.yhcy.aqc.controller.ranking.SolvedRankingResponse;
 import com.yhcy.aqc.model.quiz.Quiz;
 import com.yhcy.aqc.model.quiz.QuizState;
+import com.yhcy.aqc.model.ranking.RankingListElement;
 import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.repository.quiz.QuizStateRepository;
 import lombok.RequiredArgsConstructor;
@@ -60,16 +59,15 @@ public class QuizStateService {
         return em.createQuery(q2).getResultList();
     }
 
-    public List<SolvedRankingResponse> getRankingBySolved() {
+    public List<RankingListElement> getRankingBySolved() {
         List<Object[]> rankingList =  stateRepo.findBySolvedQuantity();
 
-        List<SolvedRankingResponse> result = new ArrayList<>();
+        List<RankingListElement> result = new ArrayList<>();
 
-        for (Object[] re : rankingList) {
-            SolvedRankingResponse srr = SolvedRankingResponse.builder()
-                    .userId(((User) re[0]).getUserId())
-                    .nickname(((User) re[0]).getNickname())
-                    .solvedCnt((Long) re[1])
+        for (Object[] rl : rankingList) {
+            RankingListElement srr = RankingListElement.builder()
+                    .user((User) rl[0])
+                    .solvedCnt((Long) rl[1])
                     .build();
             result.add(srr);
         }
@@ -77,16 +75,15 @@ public class QuizStateService {
         return result;
     }
 
-    public List<AccuracyRankingResponse> getRankingByAccuracy() {
+    public List<RankingListElement> getRankingByAccuracy() {
         List<Object[]> rankingList =  stateRepo.findByAccuracy();
 
-        List<AccuracyRankingResponse> result = new ArrayList<>();
+        List<RankingListElement> result = new ArrayList<>();
 
-        for (Object[] re : rankingList) {
-            AccuracyRankingResponse arr = AccuracyRankingResponse.builder()
-                    .userId(((User) re[0]).getUserId())
-                    .nickname(((User) re[0]).getNickname())
-                    .accuracyRatio((Double) re[1])
+        for (Object[] rl : rankingList) {
+            RankingListElement arr = RankingListElement.builder()
+                    .user((User) rl[0])
+                    .accuracyRatio((Double) rl[1])
                     .build();
             result.add(arr);
         }
