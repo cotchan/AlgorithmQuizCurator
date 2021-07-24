@@ -3,6 +3,7 @@ package com.yhcy.aqc.controller.ranking;
 import com.yhcy.aqc.controller.common.ApiResult;
 import com.yhcy.aqc.model.ranking.RankingListElement;
 import com.yhcy.aqc.service.quiz.QuizStateService;
+import com.yhcy.aqc.service.quiz.RankingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,12 +18,12 @@ import java.util.List;
 @RequestMapping("api/ranking")
 public class RankingRestController {
 
-    private final QuizStateService stateService;
+    private final RankingService rankingService;
 
     @GetMapping("by-solved")
     public ApiResult<?> getRankingBySolved() {
         try {
-            List<RankingListElement> rankingList = stateService.getRankingBySolved();
+            List<RankingListElement> rankingList = rankingService.getRankingBySolved();
             List<SolvedRankingResponse> res = new ArrayList<>();
             for (RankingListElement rle : rankingList) {
                 SolvedRankingResponse srr = SolvedRankingResponse.builder()
@@ -42,7 +43,7 @@ public class RankingRestController {
     @GetMapping("by-accuracy")
     public ApiResult<?> getRankingByAccuracy() {
         try {
-            List<RankingListElement> rankingList = stateService.getRankingByAccuracy();
+            List<RankingListElement> rankingList = rankingService.getRankingByAccuracy();
             List<AccuracyRankingResponse> res = new ArrayList<>();
             for (RankingListElement rle : rankingList) {
                 AccuracyRankingResponse arr = AccuracyRankingResponse.builder()
