@@ -4,6 +4,7 @@ import com.yhcy.aqc.controller.common.ApiResult;
 import com.yhcy.aqc.security.JwtAuthentication;
 import com.yhcy.aqc.service.quiz.QuizPickService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,11 +29,9 @@ public class QuizPickRestController {
 
     @PostMapping(value = "pick")
     public ApiResult<List<QuizPickResult>> pickProblems(@AuthenticationPrincipal JwtAuthentication authentication, @RequestBody QuizPickRequest quizPickRequest) throws Exception {
-        final int problemCnt = Integer.parseInt(quizPickRequest.getProblemCnt());
-        final String problemLevel = quizPickRequest.getProblemLevel();
-
+        final int problemCnt = NumberUtils.toInt(quizPickRequest.getProblemCnt(), 0);
         return OK(
-            quizPickService.pickRandomProblems(authentication.seq, problemCnt, problemLevel).stream().map(QuizPickResult::new).collect(toList())
+            quizPickService.pickRandomProblems(authentication.seq, problemCnt).stream().map(QuizPickResult::new).collect(toList())
         );
     }
 }

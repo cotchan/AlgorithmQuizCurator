@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Collections.emptyList;
@@ -38,26 +39,22 @@ public class QuizPickService {
      * problem_lv	    String	silver/SILVER or gold/GOLD
      */
     @Transactional
-    public List<QuizState> pickRandomProblems(int userSeq, int problemCount, String problemLevel) throws Exception {
+    public List<QuizState> pickRandomProblems(final int userSeq, final int problemCount) throws Exception {
         checkArgument(1 <= problemCount && problemCount <= 5, "problemCount must be 1 ~ 5");
-        checkArgument(problemLevel != null, "problemLevel must be not null");
-        checkArgument(problemLevel.toUpperCase().equals(QuizLevel.SILVER.value())
-                        || problemLevel.toUpperCase().equals(QuizLevel.GOLD.value()),
-                "problemLevel must be silver/SILVER or gold/GOLD");
 
         return userRepository.findById(userSeq).map(findUser -> {
-            return getRandomProblems(findUser, problemCount, problemLevel);
+            return getUsersRandomProblems(findUser, problemCount);
 
             //FIXME: Exception handling
         }).orElseThrow(() -> new Exception("Hello World"));
     }
 
-    private List<QuizState> getRandomProblems(User user, int problemCount, String problemLevel) {
+    private List<QuizState> getUsersRandomProblems(final User user, final int problemCount) {
         checkArgument(user != null, "user must be not null");
 
-        final List<Quiz> notPickedProblems = quizRepository.findAllNotPickedProblems(user);
-
         /**
+         *   Business Logic
+         *
          *   if (notPickedProblems.isEmpty()) {
          *       //npns pick
          *       //nps pick
@@ -67,53 +64,91 @@ public class QuizPickService {
          *       //nps pick
          *   }
          */
+        //메서드의 결과값. results 값은 (사용자가 한 번도 안 뽑은 문제 + npns + pns) 문제들로 구성되어있다.
+        List<QuizState> results = new LinkedList<>();
 
+        //problemCount를 restProblemCnt로 관리하여 (사용자가 한 번도 안 뽑은 문제 + npns + pns)로 problemCount 갯수를 맞춘다.
         int restProblemCnt = problemCount;
-        List<QuizState> result = new LinkedList<>();
+
+        //사용자가 문제 셋에서 한 번도 뽑은 적 없는 문제. 여기에 해당하는 문제가 있는지 가장 먼저 조회한다.
+        final List<Quiz> notPickedProblems = quizRepository.findAllNotPickedProblems(user);
 
         if (!notPickedProblems.isEmpty()) {
-            //문제 set에서 안 뽑은 문제 Pick
-            final List<Quiz> candidateProblems = getCandidateProblems(notPickedProblems, problemLevel);
+            //아직 Quiz Table에서 안 뽑은 문제가 있는 경우(npns 상태가 아님)
+            //1st. 문제 set에서 안 뽑은 문제 Pick
+            final List<Quiz> candidateProblems = getCandidateProblems(notPickedProblems);
             final List<Quiz> pickProblems;
 
             if (candidateProblems.size() <= restProblemCnt) {
+                logger.debug("[notPickedProblem if] candidateProblems.size(): {}, restProblemCnt: {}", candidateProblems.size(), restProblemCnt);
+                //문제 set에서 안 뽑은 문제가 사용자가 뽑기로 한 문제 갯수보다 작은 경우 => List 그대로 반환
                 pickProblems = candidateProblems;
             } else {
+                logger.debug("[notPickedProblem else] candidateProblems.size(): {}, restProblemCnt: {}", candidateProblems.size(), restProblemCnt);
+                //문제 set에서 안 뽑은 문제가 사용자가 뽑기로 한 문제 갯수보다 많은 경우 => List 중 일부를 랜덤으로 뽑음
                 pickProblems = getRandomProblems(candidateProblems, restProblemCnt);
             }
 
-            result = saveNewQuizState(user, QuizStateTypeEnum.NOT_SELECTED, pickProblems);
+            //Quiz Table에서 안 뽑은 문제들 이므로 quiz_state Table에 NOT_SELECTED 상태로 저장
+            results = saveNewQuizState(user, QuizStateTypeEnum.NOT_SELECTED, pickProblems);
 
-            if (restProblemCnt == result.size()) {
-                return result;
+            //Quiz Table에서 새로 뽑은 문제들로 사용자가 뽑기로 한 문제가 전부 채워졌다면 return
+            if (restProblemCnt == results.size()) {
+                return results;
             } else {
-                restProblemCnt -= result.size();
+                //Quiz Table에서 문제를 새로 다 뽑았지만, 사용자가 뽑기로 한 문제보다 부족한 경우 npns, pns 뽑으로 다음로직으로 이동
+                restProblemCnt -= results.size();
             }
         }
 
-        //npns pick
-        List<QuizState> npnsProblems = getProblemsOfQSTState(user, QuizStateTypeEnum.NOT_PICKED);
+        //Quiz Table에서 안 뽑은 문제가 없는 경우 => quiz_state 테이블에서 npns, pns 순서로 문제를 뽑아본다.
+
+        //2nd. npns pick
+        //quiz_state 테이블에서 특정 사용자의 문제 상태 중 npns인 List를 가져온다.
+        final List<QuizState> npnsProblems = getProblemsOfQSTState(user, QuizStateTypeEnum.NOT_PICKED);
 
         if (npnsProblems.size() < restProblemCnt) {
+            logger.debug("[npns if] npnsProblems.size(): {}, restProblemCnt: {}", npnsProblems.size(), restProblemCnt);
+            //quiz_state 테이블에서 npns 상태인 문제가 사용자가 뽑기로 한 문제 갯수보다 적은 경우
+            //npns 문제 갯수만큼 뽑아야 할 문제 갯수에서 차감하고 results에 추가한다.
             restProblemCnt -= npnsProblems.size();
-            update(npnsProblems, QuizStateTypeEnum.NOT_SELECTED);
-            result.addAll(npnsProblems);
+            results = Stream.concat(results.stream(), npnsProblems.stream()).collect(toList());
         } else {
-            List<QuizState> updateList = getRandomProblemsState(npnsProblems, restProblemCnt);
+            logger.debug("[npns else] npnsProblems.size(): {}, restProblemCnt: {}", npnsProblems.size(), restProblemCnt);
+            //quiz_state 테이블에서 npns 상태인 문제가 사용자가 뽑기로 한 문제 갯수보다 많은 경우 => List 중에 일부를 랜덤으로 뽑는다.
+            final List<QuizState> updateList = getRandomProblemsState(npnsProblems, restProblemCnt);
+
+            //npns 상태인 문제들을 => pns 상태로 갱신하고
             update(updateList, QuizStateTypeEnum.NOT_SELECTED);
-            result.addAll(updateList);
-            return result;
+
+            //results에 추가 후 결과 리턴
+            results = Stream.concat(results.stream(), updateList.stream()).collect(toList());
+            return results;
         }
 
-        //nps pick
-        List<QuizState> pnsProblems = getProblemsOfQSTState(user, QuizStateTypeEnum.NOT_SOLVED);
+        //3rd. nps pick
+        final List<QuizState> pnsProblems = getProblemsOfQSTState(user, QuizStateTypeEnum.NOT_SOLVED);
+
+        //nps를 뽑은 후 npns 상태였던 문제들을 pns 상태로 갱신
+        //이 코드가 실행되는 시점은 아직 사용자에게 돌려줄 문제 갯수가 남아있는 상황(pns 상태인 문제도 선택해서 돌려줘야 하는 경우)
+        //npns 상태 update를 pns를 뽑기전에 해버리면, npns => pns가 된 문제들도 pns 리스트로 내려올 수 있음
+        update(npnsProblems, QuizStateTypeEnum.NOT_SELECTED);
 
         if (pnsProblems.size() < restProblemCnt) {
-            result.addAll(pnsProblems);
+            logger.debug("[pns if] pnsProblems.size(): {}, restProblemCnt: {}", pnsProblems.size(), restProblemCnt);
+
+            //quiz_state 테이블에서 pns 상태인 문제가 사용자가 뽑기로 한 문제 갯수보다 적은 경우 => List에 그대로 추가
+            results = Stream.concat(results.stream(), pnsProblems.stream()).collect(toList());
         } else {
-            result.addAll(getRandomProblemsState(pnsProblems, restProblemCnt));
+            logger.debug("[pns else] pnsProblems.size(): {}, restProblemCnt: {}", pnsProblems.size(), restProblemCnt);
+
+            //quiz_state 테이블에서 pns 상태인 문제가 사용자가 뽑기로 한 문제 갯수보다 많은 경우 => List에서 일부를 랜덤으로 뽑는다.
+            final List<QuizState> result = getRandomProblemsState(pnsProblems, restProblemCnt);
+            results = Stream.concat(results.stream(), result.stream()).collect(toList());
         }
-        return result;
+
+        //(사용자가 한 번도 안 뽑은 문제 + npns + pns) 결과 리턴
+        return results;
     }
 
     private List<QuizState> saveNewQuizState(User user, QuizStateTypeEnum quizStateTypeEnum, List<Quiz> pickProblems) {
@@ -161,18 +196,13 @@ public class QuizPickService {
     /**
      * 사용자가 뽑지 않은 문제 List 중에서 problemLevel 에 해당하는 문제들만 반환.
      */
-    private List<Quiz> getCandidateProblems(List<Quiz> problems, String problemLevel) {
-
+    private List<Quiz> getCandidateProblems(List<Quiz> problems) {
         checkArgument(problems != null, "problems must be not null");
 
         if (problems.isEmpty()) {
             return emptyList();
-        }
-
-        if (problemLevel.toUpperCase().equals(QuizLevel.SILVER.value())) {
-            return problems.stream().filter(problem -> problem.getQuizLevel() == QuizLevel.SILVER).collect(toList());
         } else {
-            return problems.stream().filter(problem -> problem.getQuizLevel() == QuizLevel.GOLD).collect(toList());
+            return problems;
         }
     }
 

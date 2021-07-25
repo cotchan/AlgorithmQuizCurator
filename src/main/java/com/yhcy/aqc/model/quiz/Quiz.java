@@ -53,6 +53,4 @@ public class Quiz extends BaseTimeEntity {
                 .append("refSiteDesc", refSiteDesc)
                 .toString();
     }
-
-
 }

@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 
@@ -41,5 +43,15 @@ public class QuizState extends BaseTimeEntity {
         this.user = user;
         this.quiz = quiz;
         this.quizStateType = quizStateType;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("seq", seq)
+//                .append("user", user)
+                .append("quiz", quiz)
+                .append("quizStateType", quizStateType)
+                .toString();
     }
 }

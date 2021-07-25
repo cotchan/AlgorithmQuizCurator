@@ -4,6 +4,8 @@ import com.yhcy.aqc.model.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 
@@ -20,6 +22,21 @@ public class QuizStateType extends BaseTimeEntity {
     @Column(nullable = false, name = "desc")
     private String desc;
 
+    @Column(nullable = false, name = "desc_kor")
+    private String descKor;
+
     @Column(nullable = false, name = "state")
     private String state;
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("seq", seq)
+                .append("desc", desc)
+                .append("desc_kor", descKor)
+                .append("state", state)
+                .toString();
+    }
+
+
 }

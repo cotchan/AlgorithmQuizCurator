@@ -9,10 +9,10 @@ public enum QuizLevel {
     SILVER("SILVER"),
     GOLD("GOLD");
 
-    private final String val;
+    private final String value;
 
     public String value() {
-        return val;
+        return value;
     }
 
 }

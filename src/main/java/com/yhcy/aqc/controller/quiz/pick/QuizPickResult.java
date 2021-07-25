@@ -14,7 +14,7 @@ public class QuizPickResult {
     public QuizPickResult(QuizState source) {
         this.quizTitle = source.getQuiz().getTitle();
         this.quizURL = source.getQuiz().getRefSiteUrl();
-        this.quizStateType = source.getQuizStateType().getDesc();
+        this.quizStateType = source.getQuizStateType().getDescKor();
         this.quizLevel = source.getQuiz().getQuizLevel().value();
     }
 }
