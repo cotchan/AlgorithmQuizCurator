@@ -2,6 +2,8 @@ package com.yhcy.aqc.model.quiz;
 
 import lombok.AllArgsConstructor;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 @AllArgsConstructor
 public enum QuizStateTypeEnum {
     NOT_PICKED("NOT_PICKED","초기화","npns"),
@@ -26,9 +28,25 @@ public enum QuizStateTypeEnum {
     public String state() {
         return state;}
 
-    /**
-     * 리셋을 했을 때 어떻게 처리?
-     * state에
-     * 만약 state에 reset이 들어가게 되면 얘가 NPNS (ㅇㅋㅇㅋ)
-     */
+    public static QuizStateTypeEnum ofCode(final int code) {
+        checkArgument(0 <= code && code <= 5, "code value must be 1 ~ 5");
+
+        switch (code) {
+            case 0:
+                return NOT_PICKED;
+            case 1:
+                return NOT_SELECTED;
+            case 2:
+                return TC_NOT_PASSED;
+            case 3:
+                return NOT_SOLVED;
+            case 4:
+                return TIME_OVER;
+            case 5:
+                return SOLVED;
+            default:
+                //FIXME: Exception 정의 필요
+                throw new IllegalArgumentException("");
+        }
+    }
 }

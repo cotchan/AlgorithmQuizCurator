@@ -21,4 +21,9 @@ public class QuizStateTypeService {
     List<QuizStateType> findByState(QuizStateTypeEnum quizStateType) {
         return quizStateTypeRepository.findByState(quizStateType.state());
     }
+
+    QuizStateType findByCode(Integer code) {
+        QuizStateTypeEnum quizStateType = QuizStateTypeEnum.ofCode(code);
+        return findByDesc(quizStateType);
+    }
 }

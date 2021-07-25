@@ -1,13 +1,13 @@
 package com.yhcy.aqc.repository.quiz;
 
 import com.yhcy.aqc.model.quiz.Quiz;
-import com.yhcy.aqc.model.quiz.QuizState;
 import com.yhcy.aqc.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface QuizRepository extends JpaRepository<Quiz, Integer> {
@@ -18,4 +18,7 @@ public interface QuizRepository extends JpaRepository<Quiz, Integer> {
      */
     @Query(value = "SELECT qs.quiz FROM QuizState qs RIGHT JOIN qs.quiz q ON qs.user = ?1 WHERE qs.seq is null")
     List<Quiz> findAllNotPickedProblems(User user);
+
+    @Query(value = "SELECT q FROM Quiz q WHERE q.number = ?1")
+    Optional<Quiz> findByNumber(Integer quizNumber);
 }

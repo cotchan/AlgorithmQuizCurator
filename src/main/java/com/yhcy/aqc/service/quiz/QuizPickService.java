@@ -45,8 +45,8 @@ public class QuizPickService {
         return userRepository.findById(userSeq).map(findUser -> {
             return getUsersRandomProblems(findUser, problemCount);
 
-            //FIXME: Exception handling
-        }).orElseThrow(() -> new Exception("Hello World"));
+        //FIXME: Exception handling
+        }).orElseThrow(() -> new Exception("NOT_FOUND_EXCEPTION"));
     }
 
     private List<QuizState> getUsersRandomProblems(final User user, final int problemCount) {
