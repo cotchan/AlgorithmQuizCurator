@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 
@@ -18,6 +20,9 @@ public class Quiz extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer seq;
+
+    @Column(nullable = false, name = "number")
+    private Integer number;
 
     @Column(nullable = false, name = "title")
     private String title;
@@ -33,11 +38,24 @@ public class Quiz extends BaseTimeEntity {
     private String refSiteDesc;
 
     @Builder
-    public Quiz(int seq, String title, QuizLevel quizLevel, String refSiteUrl, String refSiteDesc) {
+    public Quiz(int seq, int number, String title, QuizLevel quizLevel, String refSiteUrl, String refSiteDesc) {
         this.seq = seq;
+        this.number = number;
         this.title = title;
         this.quizLevel = quizLevel;
         this.refSiteUrl = refSiteUrl;
         this.refSiteDesc = refSiteDesc;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("seq", seq)
+                .append("number", number)
+                .append("title", title)
+                .append("quizLevel", quizLevel.value())
+                .append("refSiteUrl", refSiteUrl)
+                .append("refSiteDesc", refSiteDesc)
+                .toString();
     }
 }

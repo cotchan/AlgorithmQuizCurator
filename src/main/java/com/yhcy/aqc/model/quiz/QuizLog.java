@@ -1,5 +1,6 @@
 package com.yhcy.aqc.model.quiz;
 
+import com.yhcy.aqc.model.BaseTimeEntity;
 import com.yhcy.aqc.model.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "quiz_log")
-public class QuizLog {
+public class QuizLog extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

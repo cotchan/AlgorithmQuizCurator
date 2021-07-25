@@ -4,6 +4,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * 응답 포맷입니다. 모든 응답은 ApiResult 스펙을 따릅니다.
  * 모든 응답 형태를 받을 수 있도록 <T> 제네릭을 적용합니다.
@@ -26,10 +29,13 @@ public class ApiResult<T> {
 
     private final ApiError error;
 
+    private final String timeStamp;
+
     private ApiResult(boolean success, T response, ApiError error) {
         this.success = success;
         this.response = response;
         this.error = error;
+        this.timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     public static <T> ApiResult<T> OK(T response) {
@@ -54,6 +60,10 @@ public class ApiResult<T> {
 
     public T getResponse() {
         return response;
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;
     }
 
     @Override

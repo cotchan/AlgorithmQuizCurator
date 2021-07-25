@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import static com.yhcy.aqc.controller.common.ApiResult.OK;
+import static com.yhcy.aqc.controller.user.UserInfoResponse.fromUser;
 
 @RestController
 @RequestMapping("api/user")
@@ -71,10 +72,10 @@ public class UserRestController {
 
     //FIXME: 삭제 예정
     @GetMapping(path = "me")
-    public ApiResult<UserDto_JJORO> me(@AuthenticationPrincipal JwtAuthentication authentication) {
+    public ApiResult<UserInfoResponse> me(@AuthenticationPrincipal JwtAuthentication authentication) {
         return OK(
                 userService.findById(authentication.seq)
-                        .map(UserDto_JJORO::new)
+                        .map(findUser -> fromUser(findUser))
                         .orElseThrow(() -> new NotFoundException(User.class, authentication.seq))
         );
     }
