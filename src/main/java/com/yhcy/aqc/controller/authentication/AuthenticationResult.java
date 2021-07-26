@@ -1,19 +1,18 @@
-package com.yhcy.aqc.controller.user;
+package com.yhcy.aqc.controller.authentication;
 
+import com.yhcy.aqc.model.user.User;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Getter
-public class JoinResult_JJORO {
+@RequiredArgsConstructor
+public class AuthenticationResult {
 
     private final String apiToken;
-    private final UserDto_JJORO user;
 
-    public JoinResult_JJORO(String apiToken, UserDto_JJORO user) {
-        this.apiToken = apiToken;
-        this.user = user;
-    }
+    private final User user;
 
     @Override
     public String toString() {
@@ -22,5 +21,4 @@ public class JoinResult_JJORO {
                 .append("user", user)
                 .toString();
     }
-
 }

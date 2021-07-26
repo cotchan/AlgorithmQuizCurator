@@ -2,8 +2,6 @@ package com.yhcy.aqc.controller.authentication;
 
 import com.yhcy.aqc.controller.common.ApiResult;
 import com.yhcy.aqc.error.UnauthorizedException;
-import com.yhcy.aqc.security.AuthenticationRequest;
-import com.yhcy.aqc.security.AuthenticationResult;
 import com.yhcy.aqc.security.JwtAuthenticationToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

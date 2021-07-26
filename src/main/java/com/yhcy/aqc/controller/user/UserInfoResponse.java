@@ -1,12 +1,12 @@
 package com.yhcy.aqc.controller.user;
 
-import lombok.AccessLevel;
+import com.yhcy.aqc.model.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class UserInfoResponse {
     private String id;
     private String nickname;
@@ -19,5 +19,14 @@ public class UserInfoResponse {
         this.nickname = nickname;
         this.verifyQuestion = verifyQuestion;
         this.verifyAnswer = verifyAnswer;
+    }
+
+    public static UserInfoResponse fromUser(User user) {
+        return UserInfoResponse.builder()
+                .id(user.getUserId())
+                .nickname(user.getNickname())
+                .verifyQuestion(user.getVerifyQuestion().getDesc())
+                .verifyQuestion(user.getVerifyAnswer())
+                .build();
     }
 }

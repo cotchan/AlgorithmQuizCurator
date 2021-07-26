@@ -1,4 +1,4 @@
-package com.yhcy.aqc.security;
+package com.yhcy.aqc.controller.authentication;
 
 import lombok.AccessLevel;
 import lombok.Getter;

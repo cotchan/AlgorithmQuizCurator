@@ -1,18 +1,18 @@
 package com.yhcy.aqc.model.quiz;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
 
-@Getter
+@AllArgsConstructor
 public enum QuizLevel {
 
-    SILVER("Silver"),
-    GOLD("Gold");
+    SILVER("SILVER"),
+    GOLD("GOLD");
 
     private final String value;
 
-    QuizLevel(String value) {
-        this.value = value;
+    public String value() {
+        return value;
     }
+
 }

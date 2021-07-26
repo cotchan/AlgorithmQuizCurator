@@ -1,5 +1,6 @@
 package com.yhcy.aqc.security;
 
+import com.yhcy.aqc.controller.authentication.AuthenticationRequest;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
