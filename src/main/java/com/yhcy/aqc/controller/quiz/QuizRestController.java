@@ -2,7 +2,7 @@ package com.yhcy.aqc.controller.quiz;
 
 import com.yhcy.aqc.controller.common.ApiResult;
 import com.yhcy.aqc.controller.quiz.pick.QuizPickRequest;
-import com.yhcy.aqc.controller.quiz.pick.QuizPickResult;
+import com.yhcy.aqc.controller.quiz.pick.QuizPickResponse;
 import com.yhcy.aqc.controller.quiz.update.QuizStateUpdateRequest;
 import com.yhcy.aqc.controller.quiz.update.QuizStateUpdateResult;
 import com.yhcy.aqc.security.JwtAuthentication;
@@ -31,10 +31,10 @@ public class QuizRestController {
     private final QuizService quizService;
 
     @PostMapping(value = "pick")
-    public ApiResult<List<QuizPickResult>> pickProblems(@AuthenticationPrincipal JwtAuthentication authentication, @RequestBody QuizPickRequest quizPickRequest) throws Exception {
+    public ApiResult<List<QuizPickResponse>> pickProblems(@AuthenticationPrincipal JwtAuthentication authentication, @RequestBody QuizPickRequest quizPickRequest) throws Exception {
         final int problemCnt = NumberUtils.toInt(quizPickRequest.getProblemCnt(), 0);
         return OK(
-                quizPickService.pickRandomProblems(authentication.seq, problemCnt).stream().map(QuizPickResult::new).collect(toList())
+                quizPickService.pickRandomProblems(authentication.seq, problemCnt).stream().map(QuizPickResponse::new).collect(toList())
         );
     }
 

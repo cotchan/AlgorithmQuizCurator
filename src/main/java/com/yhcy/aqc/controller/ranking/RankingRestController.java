@@ -2,7 +2,6 @@ package com.yhcy.aqc.controller.ranking;
 
 import com.yhcy.aqc.controller.common.ApiResult;
 import com.yhcy.aqc.model.ranking.RankingListElement;
-import com.yhcy.aqc.service.quiz.QuizStateService;
 import com.yhcy.aqc.service.quiz.RankingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,12 +25,7 @@ public class RankingRestController {
             List<RankingListElement> rankingList = rankingService.getRankingBySolved();
             List<SolvedRankingResponse> res = new ArrayList<>();
             for (RankingListElement rle : rankingList) {
-                SolvedRankingResponse srr = SolvedRankingResponse.builder()
-                        .userId(rle.getUser().getUserId())
-                        .nickname(rle.getUser().getNickname())
-                        .solvedCnt(rle.getSolvedCnt())
-                        .build();
-                res.add(srr);
+                res.add(new SolvedRankingResponse(rle));
             }
             return ApiResult.OK(res);
         } catch (Exception e) {
@@ -46,12 +40,7 @@ public class RankingRestController {
             List<RankingListElement> rankingList = rankingService.getRankingByAccuracy();
             List<AccuracyRankingResponse> res = new ArrayList<>();
             for (RankingListElement rle : rankingList) {
-                AccuracyRankingResponse arr = AccuracyRankingResponse.builder()
-                        .userId(rle.getUser().getUserId())
-                        .nickname(rle.getUser().getNickname())
-                        .accuracyRatio(rle.getAccuracyRatio())
-                        .build();
-                res.add(arr);
+                res.add(new AccuracyRankingResponse(rle));
             }
             return ApiResult.OK(res);
         } catch (Exception e) {

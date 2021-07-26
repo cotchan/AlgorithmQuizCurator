@@ -1,10 +1,11 @@
 package com.yhcy.aqc.controller.quiz.pick;
 
+import com.yhcy.aqc.model.quiz.Quiz;
 import com.yhcy.aqc.model.quiz.QuizState;
 import lombok.Getter;
 
 @Getter
-public class QuizPickResult {
+public class QuizPickResponse {
 
     private final String quizNumber;
     private final String quizTitle;
@@ -12,7 +13,7 @@ public class QuizPickResult {
     private final String quizStateType;
     private final String quizLevel;
 
-    public QuizPickResult(QuizState source) {
+    public QuizPickResponse(QuizState source) {
         this.quizNumber = String.valueOf(source.getQuiz().getNumber());
         this.quizTitle = source.getQuiz().getTitle();
         this.quizURL = source.getQuiz().getRefSiteUrl();

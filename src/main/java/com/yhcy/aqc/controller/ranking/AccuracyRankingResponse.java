@@ -1,22 +1,17 @@
 package com.yhcy.aqc.controller.ranking;
 
-import lombok.AccessLevel;
-import lombok.Builder;
+import com.yhcy.aqc.model.ranking.RankingListElement;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AccuracyRankingResponse {
-    private String userId;
-    private String nickname;
-    private Double accuracyRatio;
+    private final String userId;
+    private final String nickname;
+    private final Double accuracyRatio;
 
-    @Builder
-    public AccuracyRankingResponse(String userId, String nickname, Double accuracyRatio) {
-        this.userId = userId;
-        this.nickname = nickname;
-        this.accuracyRatio = accuracyRatio;
+    public AccuracyRankingResponse(RankingListElement rle) {
+        this.userId = rle.getUser().getUserId();
+        this.nickname = rle.getUser().getNickname();
+        this.accuracyRatio = rle.getAccuracyRatio();
     }
-
 }

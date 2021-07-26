@@ -141,11 +141,16 @@ public class UserService {
       
     }
 
-    //FIXME: 삭제 예정
-    public User login(String userId, String password) {
+    public User login(String userId, String password) throws UnexpectedParamException {
         Optional<User> findUser = userRepo.findByUserId(userId);
 
         if (findUser.isPresent()) {
+            //비밀번호 매치 확인
+            PasswordEncoder pe = new BCryptPasswordEncoder();
+            List<UserPassword> userPasswords = userPwRepo.findByUser(findUser.get());
+            UserPassword userPassword = userPasswords.get(userPasswords.size() - 1);
+            if (!pe.matches(password, userPassword.getPassword()))
+                throw new UnexpectedParamException("user password not matched");
             return findUser.get();
         } else {
             throw new UnexpectedParamException("user ID not found");

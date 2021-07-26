@@ -17,18 +17,18 @@ public enum QuizStateTypeEnum {
     private final String descKor;
     private final String state;
 
-    public String desc() {
+    public final String desc() {
         return desc;
     }
 
-    public String descKor() {
+    public final String descKor() {
         return descKor;
     }
 
-    public String state() {
+    public final String state() {
         return state;}
 
-    public static QuizStateTypeEnum ofCode(final int code) {
+    public static final QuizStateTypeEnum ofCode(final int code) {
         checkArgument(0 <= code && code <= 5, "code value must be 1 ~ 5");
 
         switch (code) {
@@ -44,6 +44,26 @@ public enum QuizStateTypeEnum {
                 return TIME_OVER;
             case 5:
                 return SOLVED;
+            default:
+                //FIXME: Exception 정의 필요
+                throw new IllegalArgumentException("");
+        }
+    }
+
+    public static final int toCode(final String stateTypeDesc) {
+        switch (stateTypeDesc) {
+            case "NOT_PICKED":
+                return 0;
+            case "NOT_SELECTED":
+                return 1;
+            case "TC_NOT_PASSED":
+                return 2;
+            case "NOT_SOLVED":
+                return 3;
+            case "TIME_OVER":
+                return 4;
+            case "SOLVED":
+                return 5;
             default:
                 //FIXME: Exception 정의 필요
                 throw new IllegalArgumentException("");

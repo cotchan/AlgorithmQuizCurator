@@ -19,7 +19,7 @@ public enum Role {
         this.value = value;
     }
 
-    public String value() {
+    public final String value() {
         return value;
     }
 }

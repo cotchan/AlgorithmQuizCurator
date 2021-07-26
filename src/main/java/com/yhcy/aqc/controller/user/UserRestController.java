@@ -39,12 +39,7 @@ public class UserRestController {
         try {
             User user = userService.getInfo(userId);
 
-            UserInfoResponse userInfoResponse = UserInfoResponse.builder()
-                    .id(userId)
-                    .nickname(user.getNickname())
-                    .verifyQuestion(user.getVerifyQuestion().getDesc())
-                    .verifyAnswer(user.getVerifyAnswer())
-                    .build();
+            UserInfoResponse userInfoResponse = new UserInfoResponse(user);
 
             return ApiResult.OK(userInfoResponse);
         } catch (UnexpectedParamException e) {

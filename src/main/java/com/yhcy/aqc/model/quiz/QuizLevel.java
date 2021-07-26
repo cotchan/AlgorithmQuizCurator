@@ -11,7 +11,7 @@ public enum QuizLevel {
 
     private final String value;
 
-    public String value() {
+    public final String value() {
         return value;
     }
 

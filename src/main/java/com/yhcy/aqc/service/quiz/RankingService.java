@@ -19,7 +19,6 @@ public class RankingService {
         List<Object[]> rankingList =  stateRepo.findBySolvedQuantity();
 
         List<RankingListElement> result = new ArrayList<>();
-
         for (Object[] rl : rankingList) {
             RankingListElement srr = RankingListElement.builder()
                     .user((User) rl[0])
@@ -35,7 +34,6 @@ public class RankingService {
         List<Object[]> rankingList =  stateRepo.findByAccuracy();
 
         List<RankingListElement> result = new ArrayList<>();
-
         for (Object[] rl : rankingList) {
             RankingListElement arr = RankingListElement.builder()
                     .user((User) rl[0])

@@ -1,27 +1,30 @@
 package com.yhcy.aqc.controller.myPage;
 
-import lombok.Builder;
+import com.yhcy.aqc.model.quiz.QuizLog;
+import com.yhcy.aqc.model.quiz.QuizStateTypeEnum;
 import lombok.Getter;
+
+import java.time.format.DateTimeFormatter;
 
 @Getter
 public class QuizLogResponse {
-    private String userId;
-    private String nickname;
-    private String quizTitle;
-    private String quizURL;
-    private String quizURLDesc;
-    private String quizStateDesc;
-    private String regdate;
+    private final String userId;
+    private final String nickname;
+    private final String quizTitle;
+    private final String quizURL;
+    private final String quizURLDesc;
+    private final String quizStateCode;
+    private final String quizStateDesc;
+    private final String regdate;
 
-    @Builder
-    public QuizLogResponse(String userId, String nickname, String quizTitle, String quizURL,
-                           String quizURLDesc, String quizStateDesc, String regdate) {
-        this.userId = userId;
-        this.nickname = nickname;
-        this.quizTitle = quizTitle;
-        this.quizURL = quizURL;
-        this.quizURLDesc = quizURLDesc;
-        this.quizStateDesc = quizStateDesc;
-        this.regdate = regdate;
+    public QuizLogResponse(QuizLog log) {
+        this.userId = log.getUser().getUserId();
+        this.nickname = log.getUser().getNickname();
+        this.quizTitle = log.getQuiz().getTitle();
+        this.quizURL = log.getQuiz().getRefSiteUrl();
+        this.quizURLDesc = log.getQuiz().getRefSiteDesc();
+        this.quizStateCode = ""+QuizStateTypeEnum.toCode(log.getQuizStateType().getDesc());
+        this.quizStateDesc = log.getQuizStateType().getDescKor();
+        this.regdate = log.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy.MM.dd a hh:mm:ss"));
     }
 }

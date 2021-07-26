@@ -1,22 +1,18 @@
 package com.yhcy.aqc.controller.ranking;
 
-import lombok.AccessLevel;
-import lombok.Builder;
+import com.yhcy.aqc.model.ranking.RankingListElement;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SolvedRankingResponse {
-    private String userId;
-    private String nickname;
-    private Long solvedCnt;
+    private final String userId;
+    private final String nickname;
+    private final Long solvedCnt;
 
-    @Builder
-    public SolvedRankingResponse(String userId, String nickname, Long solvedCnt) {
-        this.userId = userId;
-        this.nickname = nickname;
-        this.solvedCnt = solvedCnt;
+    public SolvedRankingResponse(RankingListElement rle) {
+        this.userId = rle.getUser().getUserId();
+        this.nickname = rle.getUser().getNickname();
+        this.solvedCnt = rle.getSolvedCnt();
     }
 
 }
