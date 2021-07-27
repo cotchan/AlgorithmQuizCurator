@@ -1,8 +1,8 @@
 package com.yhcy.aqc.controller.myPage;
 
 import com.yhcy.aqc.controller.common.ApiResult;
-import com.yhcy.aqc.model.quiz.Quiz;
 import com.yhcy.aqc.model.quiz.QuizLog;
+import com.yhcy.aqc.model.quiz.QuizState;
 import com.yhcy.aqc.model.quiz.QuizStateTypeEnum;
 import com.yhcy.aqc.service.quiz.QuizLogService;
 import com.yhcy.aqc.service.quiz.QuizStateService;
@@ -25,11 +25,14 @@ public class MyPageRestController {
     public ApiResult<?> getSolvedProblems(@PathVariable("userId") String userId) {
         try {
             List<String> stateTypes = new ArrayList<>();
+            stateTypes.add(QuizStateTypeEnum.NOT_SOLVED.desc());
+            stateTypes.add(QuizStateTypeEnum.TIME_OVER.desc());
+            stateTypes.add(QuizStateTypeEnum.TC_NOT_PASSED.desc());
             stateTypes.add(QuizStateTypeEnum.SOLVED.desc());
-            List<Quiz> quizList = stateService.getQuizByStatesAndUserId(stateTypes, userId, true);
-            List<QuizResponse> res = new ArrayList<>();
-            for (Quiz quiz : quizList) {
-                res.add(new QuizResponse(quiz));
+            List<QuizState> quizList = stateService.getQuizStatesByStatesAndUserId(stateTypes, userId);
+            List<QuizLogResponse> res = new ArrayList<>();
+            for (QuizState qs : quizList) {
+                res.add(new QuizLogResponse(qs));
             }
             return ApiResult.OK(res);
         } catch (Exception e) {
