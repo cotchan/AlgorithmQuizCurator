@@ -16,7 +16,7 @@ public interface QuizRepository extends JpaRepository<Quiz, Integer> {
      * 유저가 아직 뽑지 않은 문제 List를 조회한다.
      * JPA에서 참조 당하는 쪽을 LEFT TABLE로 하는 LEFT JOIN을 지원하지 않으므로 RIGHT JOIN으로 작성
      */
-    @Query(value = "SELECT qs.quiz FROM QuizState qs RIGHT JOIN qs.quiz q ON qs.user = ?1 WHERE qs.seq is null")
+    @Query(value = "SELECT distinct q FROM Quiz q LEFT JOIN QuizState qs ON qs.quiz = q and qs.user = ?1 WHERE qs.seq is null")
     List<Quiz> findAllNotPickedProblems(User user);
 
     @Query(value = "SELECT q FROM Quiz q WHERE q.number = ?1")

@@ -14,18 +14,18 @@ public class AuthenticationRequest {
     private String id;
 
     //password에 해당
-    private String password;
+    private String pw;
 
     public AuthenticationRequest(String id, String pw) {
         this.id = id;
-        this.password = pw;
+        this.pw = pw;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
                 .append("id", id)
-                .append("pw", password)
+                .append("pw", pw)
                 .toString();
     }
 }

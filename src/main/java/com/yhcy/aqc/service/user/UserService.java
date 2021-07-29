@@ -156,10 +156,4 @@ public class UserService {
             throw new UnexpectedParamException("user ID not found");
         }
     }
-
-    //FIXME: 삭제 예정
-    public Optional<User> findById(Integer id) {
-        return userRepo.findById(id);
-    }
-
 }

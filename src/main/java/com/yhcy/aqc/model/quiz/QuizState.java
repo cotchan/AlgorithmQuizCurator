@@ -1,6 +1,6 @@
 package com.yhcy.aqc.model.quiz;
 
-import com.yhcy.aqc.model.BaseTimeEntity;
+import com.yhcy.aqc.model.CreateUpdateTimeEntity;
 import com.yhcy.aqc.model.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "quiz_state")
-public class QuizState extends BaseTimeEntity {
+public class QuizState extends CreateUpdateTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class QuizState extends BaseTimeEntity {
     @JoinColumn(name = "user_seq")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "quiz_seq")
     private Quiz quiz;
 
@@ -48,10 +48,10 @@ public class QuizState extends BaseTimeEntity {
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-                .append("seq", seq)
-//                .append("user", user)
-                .append("quiz", quiz)
-                .append("quizStateType", quizStateType)
-                .toString();
+            .append("seq", seq)
+            .append("user", user)
+            .append("quiz", quiz)
+            .append("quizStateType", quizStateType)
+            .toString();
     }
 }

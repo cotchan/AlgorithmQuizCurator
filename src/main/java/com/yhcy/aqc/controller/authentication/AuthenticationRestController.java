@@ -4,6 +4,9 @@ import com.yhcy.aqc.controller.common.ApiResult;
 import com.yhcy.aqc.error.UnauthorizedException;
 import com.yhcy.aqc.security.JwtAuthenticationToken;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -13,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.CompletableFuture;
+
 import static com.yhcy.aqc.controller.common.ApiResult.OK;
 
 @RestController
@@ -20,15 +25,15 @@ import static com.yhcy.aqc.controller.common.ApiResult.OK;
 @RequestMapping("api/user")
 public class AuthenticationRestController {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final AuthenticationManager authenticationManager;
 
+    @Async
     @PostMapping(path = "login")
-    public ApiResult<AuthenticationResultDto> authentication(@RequestBody AuthenticationRequest authRequest)
-            throws UnauthorizedException {
+    public CompletableFuture<ApiResult<AuthenticationResultDto>> authentication(@RequestBody AuthenticationRequest authRequest) {
         try {
-
             //인증 주체 만들기
-            JwtAuthenticationToken authToken = new JwtAuthenticationToken(authRequest.getId(), authRequest.getPassword());
+            JwtAuthenticationToken authToken = new JwtAuthenticationToken(authRequest.getId(), authRequest.getPw());
 
             //만든 인증 주체를 AuthenticationManager에게 위임합니다.
             //AuthenticationManager는 인터페이스이고 실제 구현은 ProviderManager입니다.
@@ -42,12 +47,11 @@ public class AuthenticationRestController {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            return OK(
-                    new AuthenticationResultDto((AuthenticationResult) authentication.getDetails())
+            return CompletableFuture.completedFuture(
+                OK(new AuthenticationResultDto((AuthenticationResult) authentication.getDetails()))
             );
 
         } catch (AuthenticationException e) {
-            //TODO: AuthenticationException 처리 필요
             throw new UnauthorizedException(e.getMessage());
         }
     }

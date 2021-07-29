@@ -1,10 +1,12 @@
 package com.yhcy.aqc.model.quiz;
 
-import com.yhcy.aqc.model.BaseTimeEntity;
+import com.yhcy.aqc.model.CreateTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 
@@ -12,7 +14,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "quiz_tag")
-public class QuizTag extends BaseTimeEntity {
+public class QuizTag extends CreateTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,5 +33,14 @@ public class QuizTag extends BaseTimeEntity {
         this.seq = seq;
         this.quiz = quiz;
         this.quizTagType = quizTagType;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("seq", seq)
+                .append("quiz", quiz)
+                .append("quizTagType", quizTagType)
+                .toString();
     }
 }

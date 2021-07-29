@@ -12,10 +12,12 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static com.yhcy.aqc.controller.common.ApiResult.OK;
 import static java.util.stream.Collectors.toList;
@@ -30,22 +32,28 @@ public class QuizRestController {
     private final QuizPickService quizPickService;
     private final QuizService quizService;
 
+    @Async
     @PostMapping(value = "pick")
-    public ApiResult<List<QuizPickResponse>> pickProblems(@AuthenticationPrincipal JwtAuthentication authentication, @RequestBody QuizPickRequest quizPickRequest) throws Exception {
+    public CompletableFuture<ApiResult<List<QuizPickResponse>>> pickProblems(@AuthenticationPrincipal JwtAuthentication authentication, @RequestBody QuizPickRequest quizPickRequest) {
+
         final int problemCnt = NumberUtils.toInt(quizPickRequest.getProblemCnt(), 0);
-        return OK(
-                quizPickService.pickRandomProblems(authentication.seq, problemCnt).stream().map(QuizPickResponse::new).collect(toList())
-        );
+        return CompletableFuture.completedFuture(
+            OK(quizPickService.pickRandomProblems(authentication.seq, problemCnt)
+                    .stream()
+                    .map(QuizPickResponse::new)
+                    .collect(toList())
+        ));
     }
 
-    @PutMapping(value = "solved_check")
-    public ApiResult<List<QuizStateUpdateResult>> updateQuizState(@AuthenticationPrincipal JwtAuthentication authentication, @RequestBody QuizStateUpdateRequest updateRequest) throws Exception {
+    @Async
+    @PutMapping(value = "solved-check")
+    public CompletableFuture<ApiResult<List<QuizStateUpdateResult>>> updateQuizState(@AuthenticationPrincipal JwtAuthentication authentication, @RequestBody QuizStateUpdateRequest updateRequest) {
 
-        /**
-         * throws NotFoundException, IllegalArgumentException
-         */
-        return OK(
-                quizService.update(authentication.seq, updateRequest.getQuizStates()).stream().map(QuizStateUpdateResult::new).collect(toList())
-        );
+        return CompletableFuture.completedFuture(
+            OK(quizService.update(authentication.seq, updateRequest.getQuizStates())
+                    .stream()
+                    .map(QuizStateUpdateResult::new)
+                    .collect(toList())
+        ));
     }
 }

@@ -1,6 +1,8 @@
 package com.yhcy.aqc.controller.common;
 
+import com.yhcy.aqc.error.NotFoundException;
 import com.yhcy.aqc.error.ServiceRuntimeException;
+import com.yhcy.aqc.error.UnauthorizedException;
 import org.hibernate.TypeMismatchException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,10 +69,11 @@ public class GeneralExceptionHandler {
      */
     @ExceptionHandler(ServiceRuntimeException.class)
     public ResponseEntity<?> handleServiceRuntimeException(ServiceRuntimeException e) {
-//        if (e instanceof NotFoundException)
-//            return newResponse(e, HttpStatus.NOT_FOUND);
-//        if (e instanceof UnauthorizedException)
-//            return newResponse(e, HttpStatus.UNAUTHORIZED);
+        if (e instanceof NotFoundException) {
+            return newResponse(e, HttpStatus.NOT_FOUND);
+        } else if (e instanceof UnauthorizedException) {
+            return newResponse(e, HttpStatus.UNAUTHORIZED);
+        }
 
         log.warn("Unexpected service exception occurred: {}", e.getMessage(), e);
         return newResponse(e, HttpStatus.INTERNAL_SERVER_ERROR);

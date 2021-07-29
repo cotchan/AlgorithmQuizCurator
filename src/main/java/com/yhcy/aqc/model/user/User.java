@@ -1,11 +1,13 @@
 package com.yhcy.aqc.model.user;
 
-import com.yhcy.aqc.model.BaseTimeEntity;
+import com.yhcy.aqc.model.CreateUpdateTimeEntity;
 import com.yhcy.aqc.security.Jwt;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 
@@ -13,7 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "user")
-public class User extends BaseTimeEntity {
+public class User extends CreateUpdateTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +27,7 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, name = "nickname")
     private String nickname;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = true, name = "verify_question_seq")
     private VerifyQuestion verifyQuestion;
 
@@ -54,5 +56,17 @@ public class User extends BaseTimeEntity {
     public void update(VerifyQuestion verifyQuestion, String verifyAnswer) {
         this.verifyQuestion = verifyQuestion;
         this.verifyAnswer = verifyAnswer;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+            .append("seq", seq)
+            .append("userId", userId)
+            .append("nickname", nickname)
+            .append("verifyQuestion", verifyQuestion)
+            .append("verifyAnswer", verifyAnswer)
+            .append("role", role)
+            .toString();
     }
 }
