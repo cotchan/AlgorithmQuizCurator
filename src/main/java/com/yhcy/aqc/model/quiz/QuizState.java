@@ -25,11 +25,11 @@ public class QuizState extends CreateUpdateTimeEntity {
     @JoinColumn(name = "user_seq")
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_seq")
     private Quiz quiz;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "state_seq")
     private QuizStateType quizStateType;
 

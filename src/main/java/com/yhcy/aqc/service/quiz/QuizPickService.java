@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -182,6 +183,11 @@ public class QuizPickService {
      * quizStates 리스트의 QuizStateType 값을 quizStateTypeEnum 값으로 갱신
      */
     private List<QuizState> update(List<QuizState> quizStates, QuizStateTypeEnum quizStateTypeEnum) {
+        checkArgument(quizStates != null, "List<QuizState> must be not null");
+
+        if (quizStates.isEmpty()) {
+            return Collections.emptyList();
+        }
 
         QuizStateType quizStateType = quizStateTypeService.findByDesc(quizStateTypeEnum);
 

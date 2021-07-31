@@ -68,23 +68,6 @@ public enum QuizStateTypeEnum {
         } else {
             throw new NotFoundException(QuizStateTypeEnum.class, stateTypeDesc);
         }
-
-//        switch (stateTypeDesc) {
-//            case "NOT_PICKED":
-//                return 0;
-//            case "NOT_SELECTED":
-//                return 1;
-//            case "TC_NOT_PASSED":
-//                return 2;
-//            case "NOT_SOLVED":
-//                return 3;
-//            case "TIME_OVER":
-//                return 4;
-//            case "SOLVED":
-//                return 5;
-//            default:
-//                throw new IllegalArgumentException("");
-//        }
     }
 
     @Override

@@ -27,7 +27,7 @@ public class User extends CreateUpdateTimeEntity {
     @Column(nullable = false, name = "nickname")
     private String nickname;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = true, name = "verify_question_seq")
     private VerifyQuestion verifyQuestion;
 
