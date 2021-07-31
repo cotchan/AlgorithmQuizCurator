@@ -28,6 +28,17 @@ public interface QuizStateRepository extends JpaRepository<QuizState, Integer> {
     @Query("select qs from QuizState qs join fetch qs.user join fetch qs.quiz join fetch qs.quizStateType WHERE qs.user = ?1 and qs.quizStateType.state like 'pns' and qs.quizStateType.desc not like 'NOT_SELECTED'")
     List<QuizState> findAllSolvingProblems(User user);
 
+    /**
+     * User의 QuizState 중 특정 QuizStateTypeDesc에 해당하는 문제 목록을 가져온다.
+     * 즉, NOT_SELECTED, NOT_SOLVED, TIME_OVER, TC_NOT_PASSED, SOLVED 중 해당하는 상태(desc)의 문제 목록를 가져온다.
+     */
+    @Query(value = "SELECT qs FROM QuizState qs join fetch qs.quiz join fetch qs.quizStateType WHERE qs.user = ?1 and qs.quizStateType.desc = ?2")
+    List<QuizState> findAllOfTypeDescProblems(User user, String quizDesc);
+
+    /**
+     * User의 QuizState 중 특정 QuizStateTypeState에 해당하는 문제 목록을 가져온다.
+     * 즉, npns, pns, ps 중 해당하는 상태(state)의 문제 목록를 가져온다.
+     */
     @Query(value = "SELECT qs FROM QuizState qs join fetch qs.quiz join fetch qs.quizStateType WHERE qs.user = ?1 and qs.quizStateType.state = ?2")
     List<QuizState> findAllOfTypeStateProblems(User user, String quizState);
 
@@ -36,4 +47,7 @@ public interface QuizStateRepository extends JpaRepository<QuizState, Integer> {
 
     @Query(value = "SELECT qs FROM QuizState qs join fetch qs.quiz join fetch qs.quizStateType WHERE qs.user = ?1 AND qs.quiz = ?2")
     Optional<QuizState> findByUserAndQuiz(User user, Quiz quiz);
+
+    @Query(value = "SELECT qs FROM QuizState qs join fetch qs.quiz join fetch qs.quizStateType WHERE qs.user = ?1 and qs.quizStateType.desc = 'NOT_SELECTED'")
+    List<QuizState> findAllNotSelectedProblems(User user);
 }
