@@ -1,4 +1,4 @@
-package com.yhcy.aqc.controller.myPage;
+package com.yhcy.aqc.controller.myPage.dto;
 
 import com.yhcy.aqc.model.quiz.QuizLog;
 import com.yhcy.aqc.model.quiz.QuizState;

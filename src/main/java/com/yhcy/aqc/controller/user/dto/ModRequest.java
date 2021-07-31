@@ -1,4 +1,4 @@
-package com.yhcy.aqc.controller.user;
+package com.yhcy.aqc.controller.user.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

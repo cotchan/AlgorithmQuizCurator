@@ -1,4 +1,4 @@
-package com.yhcy.aqc.controller.user;
+package com.yhcy.aqc.controller.user.dto;
 
 import com.yhcy.aqc.model.user.User;
 import lombok.Getter;

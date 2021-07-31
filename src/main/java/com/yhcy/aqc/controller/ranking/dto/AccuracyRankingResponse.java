@@ -1,18 +1,17 @@
-package com.yhcy.aqc.controller.ranking;
+package com.yhcy.aqc.controller.ranking.dto;
 
 import com.yhcy.aqc.model.ranking.RankingListElement;
 import lombok.Getter;
 
 @Getter
-public class SolvedRankingResponse {
+public class AccuracyRankingResponse {
     private final String userId;
     private final String nickname;
-    private final Long solvedCnt;
+    private final Double accuracyRatio;
 
-    public SolvedRankingResponse(RankingListElement rle) {
+    public AccuracyRankingResponse(RankingListElement rle) {
         this.userId = rle.getUser().getUserId();
         this.nickname = rle.getUser().getNickname();
-        this.solvedCnt = rle.getSolvedCnt();
+        this.accuracyRatio = rle.getAccuracyRatio();
     }
-
 }
