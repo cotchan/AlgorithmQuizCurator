@@ -8,6 +8,7 @@ import com.yhcy.aqc.model.quiz.QuizStateTypeEnum;
 import com.yhcy.aqc.model.ranking.RankingListElement;
 import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.repository.quiz.QuizStateRepository;
+import com.yhcy.aqc.service.user.dao.UserDaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +27,17 @@ public class QuizStateDaoService {
 
     private final QuizStateRepository quizStateRepository;
 
+    private final UserDaoService userDaoService;
+
     @PersistenceContext
     private final EntityManager em;
+
+    //FIXME
+    public List<QuizState> getFindAllSolvingProblems(String userId) {
+        checkArgument(userId != null, "userId must be not null");
+        User user = userDaoService.findByUserId(userId);
+        return quizStateRepository.findAllSolvingProblems(user);
+    }
 
     public List<Quiz> getQuizByStatesAndUserId(List<String> stateTypes, String userId, boolean reverse) throws Exception {
         //동적 쿼리 생성

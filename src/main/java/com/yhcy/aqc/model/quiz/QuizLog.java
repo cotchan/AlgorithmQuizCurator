@@ -29,7 +29,7 @@ public class QuizLog extends CreateTimeEntity {
     @JoinColumn(name = "quiz_seq")
     private Quiz quiz;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_seq")
     private QuizStateType quizStateType;
 
