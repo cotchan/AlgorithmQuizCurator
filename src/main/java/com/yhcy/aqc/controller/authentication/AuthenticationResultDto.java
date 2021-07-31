@@ -1,6 +1,6 @@
 package com.yhcy.aqc.controller.authentication;
 
-import com.yhcy.aqc.controller.user.UserInfoResponse;
+import com.yhcy.aqc.controller.user.dto.UserInfoResponse;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;

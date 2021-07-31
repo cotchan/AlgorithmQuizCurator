@@ -1,6 +1,9 @@
 package com.yhcy.aqc.controller.user;
 
 import com.yhcy.aqc.controller.common.ApiResult;
+import com.yhcy.aqc.controller.user.dto.JoinRequest;
+import com.yhcy.aqc.controller.user.dto.ModRequest;
+import com.yhcy.aqc.controller.user.dto.UserInfoResponse;
 import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.security.JwtAuthentication;
 import com.yhcy.aqc.service.user.UserService;
@@ -12,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.yhcy.aqc.controller.common.ApiResult.OK;
-import static com.yhcy.aqc.controller.user.UserInfoResponse.fromUser;
+import static com.yhcy.aqc.controller.user.dto.UserInfoResponse.fromUser;
 
 @RequiredArgsConstructor
 @RestController

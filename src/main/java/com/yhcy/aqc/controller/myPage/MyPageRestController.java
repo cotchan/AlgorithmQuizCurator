@@ -1,6 +1,7 @@
 package com.yhcy.aqc.controller.myPage;
 
 import com.yhcy.aqc.controller.common.ApiResult;
+import com.yhcy.aqc.controller.myPage.dto.QuizLogResponse;
 import com.yhcy.aqc.model.quiz.QuizLog;
 import com.yhcy.aqc.model.quiz.QuizState;
 import com.yhcy.aqc.model.quiz.QuizStateTypeEnum;

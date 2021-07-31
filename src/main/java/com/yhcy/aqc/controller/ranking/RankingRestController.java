@@ -1,6 +1,8 @@
 package com.yhcy.aqc.controller.ranking;
 
 import com.yhcy.aqc.controller.common.ApiResult;
+import com.yhcy.aqc.controller.ranking.dto.AccuracyRankingResponse;
+import com.yhcy.aqc.controller.ranking.dto.SolvedRankingResponse;
 import com.yhcy.aqc.model.ranking.RankingListElement;
 import com.yhcy.aqc.service.quiz.dao.QuizStateDaoService;
 import lombok.RequiredArgsConstructor;
