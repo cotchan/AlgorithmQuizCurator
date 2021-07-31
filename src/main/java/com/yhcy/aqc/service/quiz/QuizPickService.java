@@ -1,10 +1,11 @@
 package com.yhcy.aqc.service.quiz;
 
 import com.yhcy.aqc.error.NotFoundException;
-import com.yhcy.aqc.model.quiz.*;
+import com.yhcy.aqc.model.quiz.Quiz;
+import com.yhcy.aqc.model.quiz.QuizState;
+import com.yhcy.aqc.model.quiz.QuizStateType;
+import com.yhcy.aqc.model.quiz.QuizStateTypeEnum;
 import com.yhcy.aqc.model.user.User;
-import com.yhcy.aqc.repository.quiz.QuizRepository;
-import com.yhcy.aqc.repository.quiz.QuizStateRepository;
 import com.yhcy.aqc.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -29,8 +30,9 @@ public class QuizPickService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final QuizStateTypeService quizStateTypeService;
-    private final QuizRepository quizRepository;
-    private final QuizStateRepository quizStateRepository;
+    private final QuizStateService quizStateService;
+    private final QuizLogService quizLogService;
+    private final QuizService quizService;
     private final UserRepository userRepository;
 
     /**
@@ -71,7 +73,7 @@ public class QuizPickService {
         int restProblemCnt = problemCount;
 
         //사용자가 문제 셋에서 한 번도 뽑은 적 없는 문제. 여기에 해당하는 문제가 있는지 가장 먼저 조회한다.
-        final List<Quiz> notPickedProblems = quizRepository.findAllNotPickedProblems(user);
+        final List<Quiz> notPickedProblems = quizService.findAllNotPickedProblems(user);
 
         if (!notPickedProblems.isEmpty()) {
             //아직 Quiz Table에서 안 뽑은 문제가 있는 경우(npns 상태가 아님)
@@ -90,7 +92,7 @@ public class QuizPickService {
             }
 
             //Quiz Table에서 안 뽑은 문제들 이므로 quiz_state Table에 NOT_SELECTED 상태로 저장
-            results = saveNewQuizState(user, QuizStateTypeEnum.NOT_SELECTED, pickProblems);
+            results = saveNewData(user, QuizStateTypeEnum.NOT_SELECTED, pickProblems);
 
             //Quiz Table에서 새로 뽑은 문제들로 사용자가 뽑기로 한 문제가 전부 채워졌다면 return
             if (restProblemCnt == results.size()) {
@@ -105,7 +107,7 @@ public class QuizPickService {
 
         //2nd. npns pick
         //quiz_state 테이블에서 특정 사용자의 문제 상태 중 npns인 List를 가져온다.
-        final List<QuizState> npnsProblems = getProblemsOfQSTState(user, QuizStateTypeEnum.NOT_PICKED);
+        final List<QuizState> npnsProblems = quizStateService.getProblemsOfQSTState(user, QuizStateTypeEnum.NOT_PICKED);
 
         if (npnsProblems.size() < restProblemCnt) {
             logger.debug("[npns if] npnsProblems.size(): {}, restProblemCnt: {}", npnsProblems.size(), restProblemCnt);
@@ -127,7 +129,7 @@ public class QuizPickService {
         }
 
         //3rd. nps pick
-        final List<QuizState> pnsProblems = getProblemsOfQSTState(user, QuizStateTypeEnum.NOT_SOLVED);
+        final List<QuizState> pnsProblems = quizStateService.getProblemsOfQSTState(user, QuizStateTypeEnum.NOT_SOLVED);
 
         //nps를 뽑은 후 npns 상태였던 문제들을 pns 상태로 갱신
         //이 코드가 실행되는 시점은 아직 사용자에게 돌려줄 문제 갯수가 남아있는 상황(pns 상태인 문제도 선택해서 돌려줘야 하는 경우)
@@ -151,7 +153,7 @@ public class QuizPickService {
         return results;
     }
 
-    private List<QuizState> saveNewQuizState(User user, QuizStateTypeEnum quizStateTypeEnum, List<Quiz> pickProblems) {
+    private List<QuizState> saveNewData(User user, QuizStateTypeEnum quizStateTypeEnum, List<Quiz> pickProblems) {
         checkArgument(user != null, "user must be not null");
         checkArgument(pickProblems != null, "pickProblems must be not null");
 
@@ -165,16 +167,12 @@ public class QuizPickService {
             final QuizStateType quizStateType = quizStateTypeService.findByDesc(quizStateTypeEnum);
 
             for (Quiz problem : pickProblems) {
-                QuizState newQuizState = QuizState.builder()
-                        .user(user)
-                        .quiz(problem)
-                        .quizStateType(quizStateType)
-                        .build();
-
-                QuizState quizState = quizStateRepository.save(newQuizState);
+                //saveNewQuizState
+                QuizState quizState = quizStateService.save(user, quizStateType, problem);
+                //saveNewQuizLog
+                quizLogService.save(user, quizStateType, problem);
                 quizStates.add(quizState);
             }
-
             return quizStates;
         }
     }
@@ -227,14 +225,5 @@ public class QuizPickService {
         checkArgument(problems.size() >= problemCount, "problems size must be greater than problemCount.");
         shuffle(problems);
         return problems.subList(0, problemCount);
-    }
-
-    /**
-     * Get problems of QuizStateTypeState
-     * QST == QuizStateType를 의미한다.
-     * NPNS, PNS, PS 중 해당하는 상태의 정보를 가져온다.
-     */
-    private List<QuizState> getProblemsOfQSTState(User user, QuizStateTypeEnum quizStateType) {
-        return quizStateRepository.findAllOfTypeStateProblems(user, quizStateType.state());
     }
 }

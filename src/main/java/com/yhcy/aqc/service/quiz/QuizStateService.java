@@ -1,21 +1,28 @@
 package com.yhcy.aqc.service.quiz;
 
+import com.yhcy.aqc.error.NotFoundException;
 import com.yhcy.aqc.model.quiz.Quiz;
 import com.yhcy.aqc.model.quiz.QuizState;
+import com.yhcy.aqc.model.quiz.QuizStateType;
+import com.yhcy.aqc.model.quiz.QuizStateTypeEnum;
+import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.repository.quiz.QuizStateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 @RequiredArgsConstructor
 @Service
 public class QuizStateService {
 
-    private final QuizStateRepository stateRepo;
+    private final QuizStateRepository quizStateRepository;
 
     @PersistenceContext
     private final EntityManager em;
@@ -75,4 +82,36 @@ public class QuizStateService {
         return em.createQuery(query).getResultList();
     }
 
+    @Transactional
+    public QuizState save(final User user, final QuizStateType quizStateType, final Quiz quiz) {
+        checkArgument(user != null, "user must be not null");
+        checkArgument(quizStateType != null, "quizStateType must be not null");
+        checkArgument(quiz != null, "quiz must be not null");
+
+        final QuizState quizState = QuizState.builder()
+                .user(user)
+                .quiz(quiz)
+                .quizStateType(quizStateType)
+                .build();
+        return quizStateRepository.save(quizState);
+    }
+
+    /**
+     * Get problems of QuizStateTypeState
+     * QST == QuizStateType를 의미한다.
+     * NPNS, PNS, PS 중 해당하는 상태의 정보를 가져온다.
+     */
+    public List<QuizState> getProblemsOfQSTState(final User user, final QuizStateTypeEnum quizStateType) {
+        checkArgument(user != null, "user must be not null");
+        checkArgument(quizStateType != null, "quizStateType must be not null");
+
+        return quizStateRepository.findAllOfTypeStateProblems(user, quizStateType.state());
+    }
+
+    public QuizState findByUserAndQuiz(final User user, final Quiz quiz) {
+        checkArgument(user != null, "user must be not null");
+        checkArgument(quiz != null, "quiz must be not null");
+
+        return quizStateRepository.findByUserAndQuiz(user, quiz).orElseThrow(() -> new NotFoundException(QuizState.class, user, quiz));
+    }
 }

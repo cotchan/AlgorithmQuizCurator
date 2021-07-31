@@ -2,19 +2,11 @@ package com.yhcy.aqc.service.quiz;
 
 import com.yhcy.aqc.error.NotFoundException;
 import com.yhcy.aqc.model.quiz.Quiz;
-import com.yhcy.aqc.model.quiz.QuizState;
-import com.yhcy.aqc.model.quiz.QuizStateType;
 import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.repository.quiz.QuizRepository;
-import com.yhcy.aqc.repository.quiz.QuizStateRepository;
-import com.yhcy.aqc.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -23,32 +15,14 @@ import static com.google.common.base.Preconditions.checkArgument;
 @RequiredArgsConstructor
 public class QuizService {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    private final UserRepository userRepository;
-    private final QuizStateRepository quizStateRepository;
-    private final QuizStateTypeService quizStateTypeService;
     private final QuizRepository quizRepository;
 
-    @Transactional
-    public List<QuizState> update(final int userSeq, final List<QuizStateForUpdate> updateRequests) {
-        checkArgument(updateRequests != null, "updateRequests must be not null");
+    public Quiz findByNumber(final int quizNumber) {
+        return quizRepository.findByNumber(quizNumber).orElseThrow(() -> new NotFoundException(Quiz.class, quizNumber));
+    }
 
-        final User user = userRepository.findById(userSeq).orElseThrow(() -> new NotFoundException(User.class, userSeq));
-
-        List<QuizState> results = new LinkedList<>();
-
-        for (QuizStateForUpdate updateRequest : updateRequests) {
-            final int quizNumber = updateRequest.getQuizNumber();
-            final int quizStateTypeCode = updateRequest.getQuizStateTypeCode();
-
-            final Quiz quiz = quizRepository.findByNumber(quizNumber).orElseThrow(() -> new NotFoundException(Quiz.class, quizNumber));
-            final QuizState quizState = quizStateRepository.findByUserAndQuiz(user, quiz).orElseThrow(() -> new NotFoundException(QuizState.class, user, quiz));
-            final QuizStateType newQuizStateType = quizStateTypeService.findByCode(quizStateTypeCode);
-            quizState.updateQuizStateType(newQuizStateType);
-            results.add(quizState);
-        }
-
-        return results;
+    public List<Quiz> findAllNotPickedProblems(final User user) {
+        checkArgument(user != null, "user must be not null");
+        return quizRepository.findAllNotPickedProblems(user);
     }
 }

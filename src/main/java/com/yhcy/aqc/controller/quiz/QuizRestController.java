@@ -7,7 +7,7 @@ import com.yhcy.aqc.controller.quiz.update.QuizStateUpdateRequest;
 import com.yhcy.aqc.controller.quiz.update.QuizStateUpdateResult;
 import com.yhcy.aqc.security.JwtAuthentication;
 import com.yhcy.aqc.service.quiz.QuizPickService;
-import com.yhcy.aqc.service.quiz.QuizService;
+import com.yhcy.aqc.service.quiz.QuizCheckService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public class QuizRestController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final QuizPickService quizPickService;
-    private final QuizService quizService;
+    private final QuizCheckService quizCheckService;
 
     @Async
     @PostMapping(value = "pick")
@@ -50,7 +50,7 @@ public class QuizRestController {
     public CompletableFuture<ApiResult<List<QuizStateUpdateResult>>> updateQuizState(@AuthenticationPrincipal JwtAuthentication authentication, @RequestBody QuizStateUpdateRequest updateRequest) {
 
         return CompletableFuture.completedFuture(
-            OK(quizService.update(authentication.seq, updateRequest.getQuizStates())
+            OK(quizCheckService.update(authentication.seq, updateRequest.getQuizStates())
                     .stream()
                     .map(QuizStateUpdateResult::new)
                     .collect(toList())

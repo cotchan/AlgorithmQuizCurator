@@ -1,11 +1,14 @@
 package com.yhcy.aqc.service.quiz;
 
+import com.yhcy.aqc.model.quiz.Quiz;
 import com.yhcy.aqc.model.quiz.QuizLog;
+import com.yhcy.aqc.model.quiz.QuizStateType;
 import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.repository.quiz.QuizLogRepository;
 import com.yhcy.aqc.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,4 +42,17 @@ public class QuizLogService {
         return result;
     }
 
+    @Transactional
+    public QuizLog save(final User user, final QuizStateType quizStateType, final Quiz quiz) {
+        checkArgument(user != null, "user must be not null");
+        checkArgument(quizStateType != null, "quizStateType must be not null");
+        checkArgument(quiz != null, "quiz must be not null");
+
+        QuizLog quizLog = QuizLog.builder()
+                .user(user)
+                .quiz(quiz)
+                .quizStateType(quizStateType)
+                .build();
+        return logRepo.save(quizLog);
+    }
 }
