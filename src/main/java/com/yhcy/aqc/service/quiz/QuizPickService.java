@@ -5,7 +5,11 @@ import com.yhcy.aqc.model.quiz.QuizState;
 import com.yhcy.aqc.model.quiz.QuizStateType;
 import com.yhcy.aqc.model.quiz.QuizStateTypeEnum;
 import com.yhcy.aqc.model.user.User;
-import com.yhcy.aqc.service.user.UserService;
+import com.yhcy.aqc.service.quiz.dao.QuizDaoService;
+import com.yhcy.aqc.service.quiz.dao.QuizLogDaoService;
+import com.yhcy.aqc.service.quiz.dao.QuizStateDaoService;
+import com.yhcy.aqc.service.quiz.dao.QuizStateTypeDaoService;
+import com.yhcy.aqc.service.user.dao.UserDaoService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +32,11 @@ public class QuizPickService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final QuizStateTypeService quizStateTypeService;
-    private final QuizStateService quizStateService;
-    private final QuizLogService quizLogService;
-    private final QuizService quizService;
-    private final UserService userService;
+    private final QuizStateTypeDaoService quizStateTypeDaoService;
+    private final QuizStateDaoService quizStateService;
+    private final QuizLogDaoService quizLogDaoService;
+    private final QuizDaoService quizDaoService;
+    private final UserDaoService userDaoService;
 
     /**
      * desc: Do Pick random problems
@@ -45,7 +49,7 @@ public class QuizPickService {
     public List<QuizState> pickRandomProblems(final int userSeq, final int problemCount) {
         checkArgument(1 <= problemCount && problemCount <= 5, "problemCount must be 1 ~ 5");
 
-        final User user = userService.findById(userSeq);
+        final User user = userDaoService.findById(userSeq);
         return getUsersRandomProblems(user, problemCount);
     }
 
@@ -71,7 +75,7 @@ public class QuizPickService {
         int restProblemCnt = problemCount;
 
         //사용자가 문제 셋에서 한 번도 뽑은 적 없는 문제. 여기에 해당하는 문제가 있는지 가장 먼저 조회한다.
-        final List<Quiz> notPickedProblems = quizService.findAllNotPickedProblems(user);
+        final List<Quiz> notPickedProblems = quizDaoService.findAllNotPickedProblems(user);
 
         if (!notPickedProblems.isEmpty()) {
             //아직 Quiz Table에서 안 뽑은 문제가 있는 경우(npns 상태가 아님)
@@ -162,13 +166,13 @@ public class QuizPickService {
             List<QuizState> quizStates = new LinkedList<>();
 
             //QuizStateType 얻기
-            final QuizStateType quizStateType = quizStateTypeService.findByDesc(quizStateTypeEnum);
+            final QuizStateType quizStateType = quizStateTypeDaoService.findByDesc(quizStateTypeEnum);
 
             for (Quiz problem : pickProblems) {
                 //saveNewQuizState
                 QuizState quizState = quizStateService.save(user, quizStateType, problem);
                 //saveNewQuizLog
-                quizLogService.save(user, quizStateType, problem);
+                quizLogDaoService.save(user, quizStateType, problem);
                 quizStates.add(quizState);
             }
             return quizStates;
@@ -185,7 +189,7 @@ public class QuizPickService {
             return Collections.emptyList();
         }
 
-        QuizStateType quizStateType = quizStateTypeService.findByDesc(quizStateTypeEnum);
+        QuizStateType quizStateType = quizStateTypeDaoService.findByDesc(quizStateTypeEnum);
 
         for (QuizState quizState : quizStates) {
             quizState.updateQuizStateType(quizStateType);

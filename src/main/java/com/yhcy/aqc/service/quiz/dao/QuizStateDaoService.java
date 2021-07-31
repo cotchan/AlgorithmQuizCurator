@@ -1,10 +1,11 @@
-package com.yhcy.aqc.service.quiz;
+package com.yhcy.aqc.service.quiz.dao;
 
 import com.yhcy.aqc.error.NotFoundException;
 import com.yhcy.aqc.model.quiz.Quiz;
 import com.yhcy.aqc.model.quiz.QuizState;
 import com.yhcy.aqc.model.quiz.QuizStateType;
 import com.yhcy.aqc.model.quiz.QuizStateTypeEnum;
+import com.yhcy.aqc.model.ranking.RankingListElement;
 import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.repository.quiz.QuizStateRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
+import java.util.LinkedList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 @RequiredArgsConstructor
 @Service
-public class QuizStateService {
+public class QuizStateDaoService {
 
     private final QuizStateRepository quizStateRepository;
 
@@ -77,7 +79,7 @@ public class QuizStateService {
         Predicate predicate = cb.and(predicateUserId, predicateStateTypes);
         //완성된 쿼리문 (실제로 where 절 안의 컬럼을 직접적으로 사용하여 구성되진 않으나 보기 간결하게 표현)
         //select seq from quiz_state where user.id = ? and (quiz_state_type.desc = ? or quiz_state_type.desc = ? or ...)
-        query.select(quizState).where(predicate).orderBy(cb.desc(quizState.get("regdate")));
+        query.select(quizState).where(predicate).orderBy(cb.desc(quizState.get("createDate")));
 
         return em.createQuery(query).getResultList();
     }
@@ -113,5 +115,51 @@ public class QuizStateService {
         checkArgument(quiz != null, "quiz must be not null");
 
         return quizStateRepository.findByUserAndQuiz(user, quiz).orElseThrow(() -> new NotFoundException(QuizState.class, user, quiz));
+    }
+
+    public List<RankingListElement> findBySolvedQuantity(final int pageSize, final int pageNo) {
+        checkArgument(pageSize > 0, "page-size must be positive number");
+        checkArgument(pageNo > 0, "page-no must be positive number");
+
+        List<Object[]> rankingList =  quizStateRepository.findBySolvedQuantity();
+        //paging
+        List<RankingListElement> result = new LinkedList<>();
+        for (int i = 0; i < pageSize; i++) {
+            try {
+                result.add(
+                        RankingListElement.builder()
+                        .user((User) rankingList.get(i)[0])
+                        .solvedCnt((Long) rankingList.get(i)[1])
+                        .build()
+                );
+            } catch (Exception e) {
+                break;
+            }
+        }
+        return result;
+    }
+
+    public List<RankingListElement> findByAccuracy(final int pageSize, final int pageNo) {
+        checkArgument(pageSize > 0, "page-size must be positive number");
+        checkArgument(pageNo > 0, "page-no must be positive number");
+
+        List<Object[]> rankingList =  quizStateRepository.findBySolvedQuantity();
+        //paging
+        List<RankingListElement> result = new LinkedList<>();
+        for (int i = 0; i < pageSize; i++) {
+            try {
+                if (rankingList.get(i)[1] == null)
+                    continue;
+                result.add(
+                        RankingListElement.builder()
+                        .user((User) rankingList.get(i)[0])
+                        .accuracyRatio((Double) rankingList.get(i)[1])
+                        .build()
+                );
+            } catch (Exception e) {
+                break;
+            }
+        }
+        return result;
     }
 }

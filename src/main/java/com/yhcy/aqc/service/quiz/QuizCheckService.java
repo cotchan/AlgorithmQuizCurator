@@ -4,7 +4,11 @@ import com.yhcy.aqc.model.quiz.Quiz;
 import com.yhcy.aqc.model.quiz.QuizState;
 import com.yhcy.aqc.model.quiz.QuizStateType;
 import com.yhcy.aqc.model.user.User;
-import com.yhcy.aqc.service.user.UserService;
+import com.yhcy.aqc.service.quiz.dao.QuizDaoService;
+import com.yhcy.aqc.service.quiz.dao.QuizLogDaoService;
+import com.yhcy.aqc.service.quiz.dao.QuizStateDaoService;
+import com.yhcy.aqc.service.quiz.dao.QuizStateTypeDaoService;
+import com.yhcy.aqc.service.user.dao.UserDaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,17 +22,17 @@ import static com.google.common.base.Preconditions.checkArgument;
 @RequiredArgsConstructor
 public class QuizCheckService {
 
-    private final QuizService quizService;
-    private final QuizLogService quizLogService;
-    private final QuizStateService quizStateService;
-    private final QuizStateTypeService quizStateTypeService;
-    private final UserService userService;
+    private final QuizDaoService quizDaoService;
+    private final QuizLogDaoService quizLogDaoService;
+    private final QuizStateDaoService quizStateService;
+    private final QuizStateTypeDaoService quizStateTypeDaoService;
+    private final UserDaoService userDaoService;
 
     @Transactional
     public List<QuizState> update(final int userSeq, final List<QuizStateForUpdate> updateRequests) {
         checkArgument(updateRequests != null, "updateRequests must be not null");
 
-        final User user = userService.findById(userSeq);
+        final User user = userDaoService.findById(userSeq);
 
         List<QuizState> results = new LinkedList<>();
 
@@ -36,11 +40,11 @@ public class QuizCheckService {
             final int quizNumber = updateRequest.getQuizNumber();
             final int quizStateTypeCode = updateRequest.getQuizStateTypeCode();
 
-            final Quiz quiz = quizService.findByNumber(quizNumber);
+            final Quiz quiz = quizDaoService.findByNumber(quizNumber);
             final QuizState quizState = quizStateService.findByUserAndQuiz(user, quiz);
-            final QuizStateType newQuizStateType = quizStateTypeService.findByCode(quizStateTypeCode);
+            final QuizStateType newQuizStateType = quizStateTypeDaoService.findByCode(quizStateTypeCode);
             quizState.updateQuizStateType(newQuizStateType);
-            quizLogService.save(user, newQuizStateType, quiz);
+            quizLogDaoService.save(user, newQuizStateType, quiz);
             results.add(quizState);
         }
 

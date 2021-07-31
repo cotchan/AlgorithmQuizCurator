@@ -5,8 +5,6 @@ import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.security.JwtAuthentication;
 import com.yhcy.aqc.service.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

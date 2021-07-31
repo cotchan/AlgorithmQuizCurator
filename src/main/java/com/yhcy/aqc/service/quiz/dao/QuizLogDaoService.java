@@ -1,4 +1,4 @@
-package com.yhcy.aqc.service.quiz;
+package com.yhcy.aqc.service.quiz.dao;
 
 import com.yhcy.aqc.model.quiz.Quiz;
 import com.yhcy.aqc.model.quiz.QuizLog;
@@ -19,12 +19,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 @Service
 @RequiredArgsConstructor
-public class QuizLogService {
+public class QuizLogDaoService {
 
     private final QuizLogRepository logRepo;
     private final UserRepository userRepo;
 
-    public List<QuizLog> getQuizLogsByUserId(String userId, int pageSize, int pageNo) {
+    public List<QuizLog> getQuizLogsByUserId(final String userId, final int pageSize, final int pageNo) {
         checkArgument(pageSize < 1 || pageNo < 1, "requested param must be positive number");
 
         Optional<User> user = userRepo.findByUserId(userId);

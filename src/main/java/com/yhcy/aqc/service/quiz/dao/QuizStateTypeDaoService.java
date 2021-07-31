@@ -1,4 +1,4 @@
-package com.yhcy.aqc.service.quiz;
+package com.yhcy.aqc.service.quiz.dao;
 
 import com.yhcy.aqc.model.quiz.QuizStateType;
 import com.yhcy.aqc.model.quiz.QuizStateTypeEnum;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class QuizStateTypeService {
+public class QuizStateTypeDaoService {
 
     private final QuizStateTypeRepository quizStateTypeRepository;
 

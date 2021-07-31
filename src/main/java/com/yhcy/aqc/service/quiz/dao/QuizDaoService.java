@@ -1,4 +1,4 @@
-package com.yhcy.aqc.service.quiz;
+package com.yhcy.aqc.service.quiz.dao;
 
 import com.yhcy.aqc.error.NotFoundException;
 import com.yhcy.aqc.model.quiz.Quiz;
@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 @Service
 @RequiredArgsConstructor
-public class QuizService {
+public class QuizDaoService {
 
     private final QuizRepository quizRepository;
 

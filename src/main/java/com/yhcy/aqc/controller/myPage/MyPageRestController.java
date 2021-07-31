@@ -4,8 +4,8 @@ import com.yhcy.aqc.controller.common.ApiResult;
 import com.yhcy.aqc.model.quiz.QuizLog;
 import com.yhcy.aqc.model.quiz.QuizState;
 import com.yhcy.aqc.model.quiz.QuizStateTypeEnum;
-import com.yhcy.aqc.service.quiz.QuizLogService;
-import com.yhcy.aqc.service.quiz.QuizStateService;
+import com.yhcy.aqc.service.quiz.dao.QuizLogDaoService;
+import com.yhcy.aqc.service.quiz.dao.QuizStateDaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +19,8 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("api/myPage")
 public class MyPageRestController {
 
-    private final QuizStateService stateService;
-    private final QuizLogService logService;
+    private final QuizStateDaoService stateService;
+    private final QuizLogDaoService logService;
 
     @Async
     @GetMapping("solved-problems/{userId}")
