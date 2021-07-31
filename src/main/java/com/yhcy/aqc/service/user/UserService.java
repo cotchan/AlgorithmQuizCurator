@@ -1,5 +1,6 @@
 package com.yhcy.aqc.service.user;
 
+import com.yhcy.aqc.error.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import com.yhcy.aqc.controller.user.ModRequest;
 import com.yhcy.aqc.controller.user.JoinRequest;
@@ -27,34 +28,39 @@ public class UserService {
     private final UserPasswordRepository userPwRepo;
     private final VerifyQuestionRepository vqRepo;
 
-    public User getInfo(String userId) throws Exception {
+    public User getInfo(String userId) {
         Optional<User> user = userRepo.findByUserId(userId);
-        if (!user.isPresent())
-            throw new UnexpectedParamException("user ID not found");
-
+        if (!user.isPresent()) {
+            throw new NotFoundException(User.class, userId);
+        }
         return user.get();
     }
 
     @Transactional
-    public void join(JoinRequest joinRequest) throws Exception {
+    public void join(JoinRequest joinRequest) {
         //영문(소문자)으로 시작하고 영문(소문자), 숫자를 포함하여 5~20자 제한
-        if (joinRequest.getId() == null || !joinRequest.getId().matches("^[a-z][a-z|_|\\\\-|0-9]{4,19}$"))
-            throw new UnexpectedParamException("invalid user ID ["+ joinRequest.getId()+"]");
+        if (joinRequest.getId() == null || !joinRequest.getId().matches("^[a-z][a-z|_|\\\\-|0-9]{4,19}$")) {
+            throw new UnexpectedParamException("invalid user ID [" + joinRequest.getId() + "]");
+        }
 
         //8자 이상 영문, 숫자, 특문 모두 포함하도록 제한
-        if (joinRequest.getPw() == null || !joinRequest.getPw().matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$"))
+        if (joinRequest.getPw() == null || !joinRequest.getPw().matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")) {
             throw new UnexpectedParamException("invalid user password");
+        }
 
         //비밀번호와 비밀번호 확인 값이 같은지 확인
-        if (joinRequest.getPwConfirm() == null || !joinRequest.getPw().equals(joinRequest.getPwConfirm()))
+        if (joinRequest.getPwConfirm() == null || !joinRequest.getPw().equals(joinRequest.getPwConfirm())) {
             throw new UnexpectedParamException("mismatched password confirm");
+        }
 
         //닉네임은 2글자 이상으로 제한
-        if (joinRequest.getNickname() == null || joinRequest.getNickname().trim().length() < 2)
+        if (joinRequest.getNickname() == null || joinRequest.getNickname().trim().length() < 2) {
             throw new UnexpectedParamException("invalid user nickname ["+ joinRequest.getNickname()+"]");
+        }
 
-        if (joinRequest.getVerifyAnswer() == null || joinRequest.getVerifyAnswer().trim().length() == 0)
+        if (joinRequest.getVerifyAnswer() == null || joinRequest.getVerifyAnswer().trim().length() == 0) {
             throw new UnexpectedParamException("invalid verify question answer ["+ joinRequest.getVerifyAnswer()+"]");
+        }
 
         //중복된 아이디 제한
         Optional<User> dupTest = userRepo.findByUserId(joinRequest.getId());
@@ -80,7 +86,6 @@ public class UserService {
         //비밀번호 해싱
         PasswordEncoder pe = new BCryptPasswordEncoder();
         String encodedPassword = pe.encode(joinRequest.getPw());
-        //System.out.println(encodedPassword);
 
         User newUser = User.builder()
                 .seq(null)
@@ -101,7 +106,7 @@ public class UserService {
     }
 
     @Transactional
-    public void mod(ModRequest modRequest) throws Exception {
+    public void mod(ModRequest modRequest) {
         //인증 질문 변조 확인
         int vqSeq;
         try {
@@ -118,7 +123,7 @@ public class UserService {
         user.ifPresent(selectUser -> {
             selectUser.update(vq.get(), modRequest.getVerifyAnswer());
         });
-        user.orElseThrow(() -> new UnexpectedParamException("user ID not found"));
+        user.orElseThrow(() -> new NotFoundException(User.class, "user ID not found"));
         userRepo.save(user.get());
 
         //비밀번호 해싱
@@ -141,7 +146,7 @@ public class UserService {
       
     }
 
-    public User login(String userId, String password) throws UnexpectedParamException {
+    public User login(String userId, String password) {
         Optional<User> findUser = userRepo.findByUserId(userId);
 
         if (findUser.isPresent()) {

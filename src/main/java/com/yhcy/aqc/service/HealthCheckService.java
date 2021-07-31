@@ -12,7 +12,7 @@ public class HealthCheckService {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     public Long healthCheck() throws InterruptedException {
-        sleep(3000);
+        sleep(5000);
         log.info("HealthCheckService::healthCheck {}", Thread.currentThread().getName());
         return System.currentTimeMillis();
     }

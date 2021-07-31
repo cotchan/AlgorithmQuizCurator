@@ -13,10 +13,5 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class QuizStateUpdateRequest {
-
-    List<QuizStateForUpdate> quizStates;
-
-    public QuizStateUpdateRequest(List<QuizStateForUpdate> quizStates) {
-        this.quizStates = quizStates;
-    }
+    private List<QuizStateForUpdate> quizStates;
 }

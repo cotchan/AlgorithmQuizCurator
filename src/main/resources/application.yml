@@ -8,8 +8,10 @@ spring:
     username: aqc_dev
     password: yhcy!@#$
   jpa:
-    hibernate:
-      ddl-auto: validate
+    properties:
+      hibernate:
+        ddl-auto: validate
+        show_sql: true
   jackson:
     property-naming-strategy: SNAKE_CASE
 

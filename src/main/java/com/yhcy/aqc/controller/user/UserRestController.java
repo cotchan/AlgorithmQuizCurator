@@ -1,14 +1,17 @@
 package com.yhcy.aqc.controller.user;
 
 import com.yhcy.aqc.controller.common.ApiResult;
-import com.yhcy.aqc.error.UnexpectedParamException;
 import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.security.JwtAuthentication;
 import com.yhcy.aqc.service.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.CompletableFuture;
 
 import static com.yhcy.aqc.controller.common.ApiResult.OK;
 import static com.yhcy.aqc.controller.user.UserInfoResponse.fromUser;
@@ -20,46 +23,26 @@ public class UserRestController {
 
     private final UserService userService;
 
+    @Async
     @PostMapping("join")
-    public ApiResult<?> joinProcess(@RequestBody JoinRequest newUser) {
-        try {
-            userService.join(newUser);
-            return ApiResult.OK("success");
-        } catch (UnexpectedParamException e) {
-            return ApiResult.ERROR(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ApiResult.ERROR(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public CompletableFuture<ApiResult<Void>> joinProcess(@RequestBody JoinRequest newUser) {
+        userService.join(newUser);
+        return CompletableFuture.completedFuture(ApiResult.OK(null));
     }
 
+    @Async
     @GetMapping("info/{userId}")
-    public ApiResult<?> getInfoProcess(@PathVariable("userId") String userId) {
-        try {
-            User user = userService.getInfo(userId);
-
-            UserInfoResponse userInfoResponse = new UserInfoResponse(user);
-
-            return ApiResult.OK(userInfoResponse);
-        } catch (UnexpectedParamException e) {
-            return ApiResult.ERROR(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ApiResult.ERROR(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public CompletableFuture<ApiResult<UserInfoResponse>> getInfoProcess(@PathVariable("userId") String userId) {
+        User user = userService.getInfo(userId);
+        UserInfoResponse userInfoResponse = new UserInfoResponse(user);
+        return CompletableFuture.completedFuture(ApiResult.OK(userInfoResponse));
     }
 
+    @Async
     @PostMapping("info")
-    public ApiResult<?> modInfoProcess(@RequestBody ModRequest modUser) {
-        try {
-            userService.mod(modUser);
-            return ApiResult.OK("success");
-        } catch (UnexpectedParamException e) {
-            return ApiResult.ERROR(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ApiResult.ERROR(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public CompletableFuture<ApiResult<Void>> modInfoProcess(@RequestBody ModRequest modUser) {
+        userService.mod(modUser);
+        return CompletableFuture.completedFuture(ApiResult.OK(null));
     }
 
     //FIXME: 삭제 예정

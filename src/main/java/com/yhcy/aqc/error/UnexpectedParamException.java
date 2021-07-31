@@ -1,17 +1,23 @@
 package com.yhcy.aqc.error;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.yhcy.aqc.util.MessageUtils;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UnexpectedParamException extends RuntimeException {
+public class UnexpectedParamException extends ServiceRuntimeException {
 
-    private String message;
+    static final String MESSAGE_KEY = "error.unexpected-params";
+    static final String MESSAGE_DETAIL = "error.unexpected-params.details";
 
     public UnexpectedParamException(String message) {
-        super(message);
-        this.message = message;
+        super(MESSAGE_KEY, MESSAGE_DETAIL, new Object[]{message});
+    }
+
+    @Override
+    public String getMessage() {
+        return MessageUtils.getMessage(getDetailKey(), getParams());
+    }
+
+    @Override
+    public String toString() {
+        return MessageUtils.getMessage(getMessageKey());
     }
 }

@@ -1,6 +1,5 @@
 package com.yhcy.aqc.service.quiz;
 
-import com.yhcy.aqc.error.UnexpectedParamException;
 import com.yhcy.aqc.model.quiz.QuizLog;
 import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.repository.quiz.QuizLogRepository;
@@ -13,6 +12,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 @Service
 @RequiredArgsConstructor
 public class QuizLogService {
@@ -20,9 +21,9 @@ public class QuizLogService {
     private final QuizLogRepository logRepo;
     private final UserRepository userRepo;
 
-    public List<QuizLog> getQuizLogsByUserId(String userId, int pageSize, int pageNo) throws Exception {
-        if (pageSize < 1 || pageNo < 1)
-            throw new UnexpectedParamException("requested param must be positive number");
+    public List<QuizLog> getQuizLogsByUserId(String userId, int pageSize, int pageNo) {
+        checkArgument(pageSize < 1 || pageNo < 1, "requested param must be positive number");
+
         Optional<User> user = userRepo.findByUserId(userId);
         List<QuizLog> logs = logRepo.findAllByUser(user.get());
         Collections.reverse(logs);

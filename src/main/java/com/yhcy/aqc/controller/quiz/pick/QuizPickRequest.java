@@ -11,8 +11,4 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class QuizPickRequest {
     private String problemCnt;
-
-    public QuizPickRequest(String problemCnt) {
-        this.problemCnt = problemCnt;
-    }
 }

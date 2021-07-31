@@ -52,7 +52,7 @@ public class QuizStateService {
         return em.createQuery(q2).getResultList();
     }
 
-    public List<QuizState> getQuizStatesByStatesAndUserId(List<String> stateTypes, String userId) throws Exception {
+    public List<QuizState> getQuizStatesByStatesAndUserId(List<String> stateTypes, String userId) {
         //동적 쿼리 생성
         CriteriaBuilder cb = em.getCriteriaBuilder();
         //state와 userId를 조건에 사용하는 서브쿼리 생성, 결과에 quiz_seq만 사용하므로 결과 제네릭을 Integer로 지정

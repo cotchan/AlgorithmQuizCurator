@@ -3,6 +3,7 @@ package com.yhcy.aqc.controller.common;
 import com.yhcy.aqc.error.NotFoundException;
 import com.yhcy.aqc.error.ServiceRuntimeException;
 import com.yhcy.aqc.error.UnauthorizedException;
+import com.yhcy.aqc.error.UnexpectedParamException;
 import org.hibernate.TypeMismatchException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,12 @@ public class GeneralExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<?> handleMethodNotAllowedException(Exception e) {
         return newResponse(e, HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    //FIXME
+    @ExceptionHandler(UnexpectedParamException.class)
+    public ResponseEntity<?> handleUnexpectedParamException(UnexpectedParamException e) {
+        return newResponse(e, HttpStatus.BAD_REQUEST);
     }
 
     /**

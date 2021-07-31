@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 public class NotFoundException extends ServiceRuntimeException {
 
     static final String MESSAGE_KEY = "error.notfound";
-    static final String MESSAGE_DETAILS = "error.notfound.details";
+    static final String MESSAGE_DETAIL = "error.notfound.details";
 
     public NotFoundException(Class<?> cls, Object... values) {
         this(cls.getSimpleName(), values);
@@ -14,7 +14,7 @@ public class NotFoundException extends ServiceRuntimeException {
 
     //StringUtils.join을 사용하면 Object의 toString 값을 리턴해줌 -> 오버라이딩하면 됨
     public NotFoundException(String targetName, Object... values) {
-        super(MESSAGE_KEY, MESSAGE_DETAILS, new String[]{targetName, (values != null && values.length > 0) ? StringUtils.join(values, ",") : ""});
+        super(MESSAGE_KEY, MESSAGE_DETAIL, new String[]{targetName, (values != null && values.length > 0) ? StringUtils.join(values, ",") : ""});
     }
 
     @Override
