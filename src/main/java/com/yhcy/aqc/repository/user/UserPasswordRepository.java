@@ -7,12 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface UserPasswordRepository extends JpaRepository<UserPassword, Integer> {
 
-    @Query("select up from UserPassword up where up.user = ?1 order by up.createDate desc")
+    @Query("select up from UserPassword up join fetch up.user where up.user = ?1 order by up.createDate desc")
     List<UserPassword> findByUser(User user);
 
 }

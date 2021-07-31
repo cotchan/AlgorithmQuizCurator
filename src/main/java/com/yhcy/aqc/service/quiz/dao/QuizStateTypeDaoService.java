@@ -14,15 +14,15 @@ public class QuizStateTypeDaoService {
 
     private final QuizStateTypeRepository quizStateTypeRepository;
 
-    QuizStateType findByDesc(QuizStateTypeEnum quizStateType) {
+    public QuizStateType findByDesc(QuizStateTypeEnum quizStateType) {
         return quizStateTypeRepository.findByDesc(quizStateType.desc());
     }
 
-    List<QuizStateType> findByState(QuizStateTypeEnum quizStateType) {
+    public List<QuizStateType> findByState(QuizStateTypeEnum quizStateType) {
         return quizStateTypeRepository.findByState(quizStateType.state());
     }
 
-    QuizStateType findByCode(Integer code) {
+    public QuizStateType findByCode(Integer code) {
         QuizStateTypeEnum quizStateType = QuizStateTypeEnum.ofCode(code);
         return findByDesc(quizStateType);
     }
