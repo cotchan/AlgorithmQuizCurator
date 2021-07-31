@@ -1,5 +1,6 @@
 package com.yhcy.aqc.service.quiz;
 
+import com.yhcy.aqc.error.NotFoundException;
 import com.yhcy.aqc.model.quiz.*;
 import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.repository.quiz.QuizRepository;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -39,14 +41,12 @@ public class QuizPickService {
      * problem_lv	    String	silver/SILVER or gold/GOLD
      */
     @Transactional
-    public List<QuizState> pickRandomProblems(final int userSeq, final int problemCount) throws Exception {
+    public List<QuizState> pickRandomProblems(final int userSeq, final int problemCount) {
         checkArgument(1 <= problemCount && problemCount <= 5, "problemCount must be 1 ~ 5");
 
         return userRepository.findById(userSeq).map(findUser -> {
             return getUsersRandomProblems(findUser, problemCount);
-
-        //FIXME: Exception handling
-        }).orElseThrow(() -> new Exception("NOT_FOUND_EXCEPTION"));
+        }).orElseThrow(() -> new NotFoundException(User.class, userSeq));
     }
 
     private List<QuizState> getUsersRandomProblems(final User user, final int problemCount) {
@@ -183,6 +183,11 @@ public class QuizPickService {
      * quizStates 리스트의 QuizStateType 값을 quizStateTypeEnum 값으로 갱신
      */
     private List<QuizState> update(List<QuizState> quizStates, QuizStateTypeEnum quizStateTypeEnum) {
+        checkArgument(quizStates != null, "List<QuizState> must be not null");
+
+        if (quizStates.isEmpty()) {
+            return Collections.emptyList();
+        }
 
         QuizStateType quizStateType = quizStateTypeService.findByDesc(quizStateTypeEnum);
 
@@ -232,23 +237,4 @@ public class QuizPickService {
     private List<QuizState> getProblemsOfQSTState(User user, QuizStateTypeEnum quizStateType) {
         return quizStateRepository.findAllOfTypeStateProblems(user, quizStateType.state());
     }
-
-    //FIXME
-    //for text
-    public void testFunc() {
-
-        int userSeq = 25;
-        userRepository.findById(userSeq).map(findUser -> {
-            List<QuizState> qs = quizStateRepository.findAllOfTypeStateProblems(findUser, QuizStateTypeEnum.NOT_SOLVED.state());
-
-            for (QuizState quizState : qs) {
-                logger.info("quiz url = {}", quizState.getQuiz().getRefSiteUrl());
-                logger.info("quizStateType state  = {}", quizState.getQuizStateType().getDesc());
-            }
-
-            return true;
-        });
-    }
-
-
 }

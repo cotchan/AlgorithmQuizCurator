@@ -1,7 +1,6 @@
 package com.yhcy.aqc.controller.user;
 
 import com.yhcy.aqc.controller.common.ApiResult;
-import com.yhcy.aqc.error.NotFoundException;
 import com.yhcy.aqc.error.UnexpectedParamException;
 import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.security.JwtAuthentication;
@@ -65,11 +64,7 @@ public class UserRestController {
 
     //FIXME: 삭제 예정
     @GetMapping(path = "me")
-    public ApiResult<UserInfoResponse> me(@AuthenticationPrincipal JwtAuthentication authentication) {
-        return OK(
-                userService.findById(authentication.seq)
-                        .map(findUser -> fromUser(findUser))
-                        .orElseThrow(() -> new NotFoundException(User.class, authentication.seq))
-        );
+    public ApiResult<UserInfoResponse> me(@AuthenticationPrincipal JwtAuthentication authentication) throws Exception {
+        return OK(fromUser(userService.getInfo(authentication.userId)));
     }
 }

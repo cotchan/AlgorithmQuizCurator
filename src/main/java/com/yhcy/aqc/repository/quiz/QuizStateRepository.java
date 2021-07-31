@@ -21,13 +21,12 @@ public interface QuizStateRepository extends JpaRepository<QuizState, Integer> {
     @Query("select qs.user, (sum(case when qs.quizStateType.desc = 'SOLVED' then 1 else 0 end) * 1.0 / sum(case when (qs.quizStateType.desc = 'SOLVED' or qs.quizStateType.desc = 'TC_NOT_PASSED' or qs.quizStateType.desc = 'NOT_SOLVED' or qs.quizStateType.desc = 'TIME_OVER') then 1 else 0 end)) as ratio from QuizState qs group by qs.user order by ratio desc")
     List<Object[]> findByAccuracy();
     
-    @Query(value = "SELECT qs FROM QuizState qs WHERE qs.user = ?1 and qs.quizStateType.state = ?2")
+    @Query(value = "SELECT qs FROM QuizState qs join fetch qs.quiz WHERE qs.user = ?1 and qs.quizStateType.state = ?2")
     List<QuizState> findAllOfTypeStateProblems(User user, String quizState);
 
-    @Query(value = "SELECT qs FROM QuizState qs WHERE qs.user = ?1")
+    @Query(value = "SELECT qs FROM QuizState qs join fetch qs.quiz WHERE qs.user = ?1")
     List<QuizState> findAllByUser(User user);
 
-    @Query(value = "SELECT qs FROM QuizState qs WHERE qs.user = ?1 AND qs.quiz = ?2")
+    @Query(value = "SELECT qs FROM QuizState qs join fetch qs.quiz WHERE qs.user = ?1 AND qs.quiz = ?2")
     Optional<QuizState> findByUserAndQuiz(User user, Quiz quiz);
-    
 }

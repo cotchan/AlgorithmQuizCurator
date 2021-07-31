@@ -50,7 +50,7 @@ class UserRestControllerTest {
                 .andExpect(jsonPath("$.success", is(true)))
                 .andExpect(jsonPath("$.response.id", is("zoroKevin")))
                 .andExpect(jsonPath("$.response.nickname", is("test001")))
-                .andExpect(jsonPath("$.response.verify_question", is("안알랴쥼")))
+                .andExpect(jsonPath("$.response.verify_question", is("테스트 질문1")))
         ;
     }
 }

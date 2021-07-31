@@ -44,7 +44,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     private Authentication processUserAuthentication(AuthenticationRequest request) {
         try {
             //여기에 principal 부분은 email, credentials 부분은 비밀번호입니다.
-            User user = userService.login(request.getId(), request.getPassword());
+            User user = userService.login(request.getId(), request.getPw());
 
             /**
              * 인증 주체를 새로 만들고 있습니다.

@@ -1,6 +1,9 @@
 package com.yhcy.aqc.model.quiz;
 
+import com.yhcy.aqc.error.NotFoundException;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -29,7 +32,7 @@ public enum QuizStateTypeEnum {
         return state;}
 
     public static final QuizStateTypeEnum ofCode(final int code) {
-        checkArgument(0 <= code && code <= 5, "code value must be 1 ~ 5");
+        checkArgument(0 <= code && code <= 5, "code value must be 0 ~ 5");
 
         switch (code) {
             case 0:
@@ -45,28 +48,34 @@ public enum QuizStateTypeEnum {
             case 5:
                 return SOLVED;
             default:
-                //FIXME: Exception 정의 필요
-                throw new IllegalArgumentException("");
+                throw new NotFoundException(QuizStateTypeEnum.class, code);
         }
     }
 
     public static final int toCode(final String stateTypeDesc) {
-        switch (stateTypeDesc) {
-            case "NOT_PICKED":
-                return 0;
-            case "NOT_SELECTED":
-                return 1;
-            case "TC_NOT_PASSED":
-                return 2;
-            case "NOT_SOLVED":
-                return 3;
-            case "TIME_OVER":
-                return 4;
-            case "SOLVED":
-                return 5;
-            default:
-                //FIXME: Exception 정의 필요
-                throw new IllegalArgumentException("");
+        if (NOT_PICKED.desc().equals(stateTypeDesc)) {
+            return 0;
+        } else if (NOT_SELECTED.desc().equals(stateTypeDesc)) {
+            return 1;
+        } else if (TC_NOT_PASSED.desc().equals(stateTypeDesc)) {
+            return 2;
+        } else if (NOT_SOLVED.desc().equals(stateTypeDesc)) {
+            return 3;
+        } else if (TIME_OVER.desc().equals(stateTypeDesc)) {
+            return 4;
+        } else if (SOLVED.desc().equals(stateTypeDesc)) {
+            return 5;
+        } else {
+            throw new NotFoundException(QuizStateTypeEnum.class, stateTypeDesc);
         }
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("desc", desc)
+                .append("desc_kor", descKor)
+                .append("state", state)
+                .toString();
     }
 }

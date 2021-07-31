@@ -1,5 +1,6 @@
 package com.yhcy.aqc.service.quiz;
 
+import com.yhcy.aqc.error.NotFoundException;
 import com.yhcy.aqc.model.quiz.Quiz;
 import com.yhcy.aqc.model.quiz.QuizState;
 import com.yhcy.aqc.model.quiz.QuizStateType;
@@ -30,10 +31,10 @@ public class QuizService {
     private final QuizRepository quizRepository;
 
     @Transactional
-    public List<QuizState> update(final int userSeq, final List<QuizStateForUpdate> updateRequests) throws Exception {
+    public List<QuizState> update(final int userSeq, final List<QuizStateForUpdate> updateRequests) {
         checkArgument(updateRequests != null, "updateRequests must be not null");
 
-        final User user = userRepository.findById(userSeq).orElseThrow(() -> new Exception("NOT_FOUND_EXCEPTION"));
+        final User user = userRepository.findById(userSeq).orElseThrow(() -> new NotFoundException(User.class, userSeq));
 
         List<QuizState> results = new LinkedList<>();
 
@@ -41,8 +42,8 @@ public class QuizService {
             final int quizNumber = updateRequest.getQuizNumber();
             final int quizStateTypeCode = updateRequest.getQuizStateTypeCode();
 
-            final Quiz quiz = quizRepository.findByNumber(quizNumber).orElseThrow(() -> new Exception("NOT_FOUND_EXCEPTION"));
-            final QuizState quizState = quizStateRepository.findByUserAndQuiz(user, quiz).orElseThrow(() -> new Exception("NOT_FOUND_EXCEPTION"));
+            final Quiz quiz = quizRepository.findByNumber(quizNumber).orElseThrow(() -> new NotFoundException(Quiz.class, quizNumber));
+            final QuizState quizState = quizStateRepository.findByUserAndQuiz(user, quiz).orElseThrow(() -> new NotFoundException(QuizState.class, user, quiz));
             final QuizStateType newQuizStateType = quizStateTypeService.findByCode(quizStateTypeCode);
             quizState.updateQuizStateType(newQuizStateType);
             results.add(quizState);
