@@ -6,8 +6,8 @@ import com.yhcy.aqc.controller.quiz.pick.QuizPickResponse;
 import com.yhcy.aqc.controller.quiz.update.QuizStateUpdateRequest;
 import com.yhcy.aqc.controller.quiz.update.QuizStateUpdateResult;
 import com.yhcy.aqc.security.JwtAuthentication;
-import com.yhcy.aqc.service.quiz.QuizPickService;
 import com.yhcy.aqc.service.quiz.QuizCheckService;
+import com.yhcy.aqc.service.quiz.QuizPickService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
@@ -31,6 +31,17 @@ public class QuizRestController {
 
     private final QuizPickService quizPickService;
     private final QuizCheckService quizCheckService;
+
+    @Async
+    @GetMapping
+    public CompletableFuture<ApiResult<List<QuizPickResponse>>> getNotSelectedProblems(@AuthenticationPrincipal JwtAuthentication authentication) {
+        return CompletableFuture.completedFuture(
+            OK(quizCheckService.getNotSelectedProblems(authentication.seq)
+                    .stream()
+                    .map(QuizPickResponse::new)
+                    .collect(toList())
+        ));
+    }
 
     @Async
     @PostMapping(value = "pick")

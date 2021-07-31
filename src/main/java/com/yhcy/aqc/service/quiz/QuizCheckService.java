@@ -50,4 +50,9 @@ public class QuizCheckService {
 
         return results;
     }
+
+    public List<QuizState> getNotSelectedProblems(final int userSeq) {
+        final User user = userDaoService.findById(userSeq);
+        return quizStateService.getNotSelectedProblems(user);
+    }
 }

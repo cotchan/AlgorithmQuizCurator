@@ -127,6 +127,30 @@ public class QuizStateDaoService {
         return quizStateRepository.findByUserAndQuiz(user, quiz).orElseThrow(() -> new NotFoundException(QuizState.class, user, quiz));
     }
 
+    public List<QuizState> getNotSelectedProblems(final User user) {
+        checkArgument(user != null, "user must be not null");
+        return quizStateRepository.findAllNotSelectedProblems(user);
+    }
+
+    /**
+     * quizStateRepository.findAllOfTypeDescProblems 래핑 메소드
+     * QuizStateTypeEnum의 code 값으로 조회할 때 사용하기 위해 만들어놓음
+     */
+    public List<QuizState> findAllByQuizStateTypeCode(final User user, final int code) {
+        checkArgument(user != null, "user must be not null");
+        QuizStateTypeEnum targetCode = QuizStateTypeEnum.ofCode(code);
+        return findAllByQuizStateTypeDesc(user, targetCode);
+    }
+
+    /**
+     * quizStateRepository.findAllOfTypeDescProblems 래핑 메소드
+     * QuizStateTypeEnum의 desc 값으로 조회할 때 사용하기 위해 만들어놓음
+     */
+    public List<QuizState> findAllByQuizStateTypeDesc(final User user, final QuizStateTypeEnum quizStateTypeEnum) {
+        checkArgument(user != null, "user must be not null");
+        return quizStateRepository.findAllOfTypeDescProblems(user, quizStateTypeEnum.desc());
+    }
+
     public List<RankingListElement> findBySolvedQuantity(final int pageSize, final int pageNo) {
         checkArgument(pageSize > 0, "page-size must be positive number");
         checkArgument(pageNo > 0, "page-no must be positive number");
