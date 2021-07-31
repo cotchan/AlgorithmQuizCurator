@@ -1,12 +1,11 @@
 package com.yhcy.aqc.service.quiz;
 
-import com.yhcy.aqc.error.NotFoundException;
 import com.yhcy.aqc.model.quiz.Quiz;
 import com.yhcy.aqc.model.quiz.QuizState;
 import com.yhcy.aqc.model.quiz.QuizStateType;
 import com.yhcy.aqc.model.quiz.QuizStateTypeEnum;
 import com.yhcy.aqc.model.user.User;
-import com.yhcy.aqc.repository.user.UserRepository;
+import com.yhcy.aqc.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +32,7 @@ public class QuizPickService {
     private final QuizStateService quizStateService;
     private final QuizLogService quizLogService;
     private final QuizService quizService;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     /**
      * desc: Do Pick random problems
@@ -46,9 +45,8 @@ public class QuizPickService {
     public List<QuizState> pickRandomProblems(final int userSeq, final int problemCount) {
         checkArgument(1 <= problemCount && problemCount <= 5, "problemCount must be 1 ~ 5");
 
-        return userRepository.findById(userSeq).map(findUser -> {
-            return getUsersRandomProblems(findUser, problemCount);
-        }).orElseThrow(() -> new NotFoundException(User.class, userSeq));
+        final User user = userService.findById(userSeq);
+        return getUsersRandomProblems(user, problemCount);
     }
 
     private List<QuizState> getUsersRandomProblems(final User user, final int problemCount) {

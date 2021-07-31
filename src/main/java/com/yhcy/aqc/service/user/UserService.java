@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -160,5 +162,19 @@ public class UserService {
         } else {
             throw new UnexpectedParamException("user ID not found");
         }
+    }
+
+    public User findById(final int id) {
+        return userRepo.findById(id).orElseThrow(() -> new NotFoundException(User.class, id));
+    }
+
+    public User findByUserId(final String userId) {
+        checkArgument(userId != null, "userId must be not null");
+        return userRepo.findByUserId(userId).orElseThrow(() -> new NotFoundException(User.class, userId));
+    }
+
+    public User findByNickname(final String nickname) {
+        checkArgument(nickname != null, "nickname must be not null");
+        return userRepo.findByNickname(nickname).orElseThrow(() -> new NotFoundException(User.class, nickname));
     }
 }
