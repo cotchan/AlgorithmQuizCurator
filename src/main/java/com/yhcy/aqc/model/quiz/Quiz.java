@@ -46,7 +46,7 @@ public class Quiz extends CreateTimeEntity {
      * Quiz 단독으로 사용되는 쿼리에는 fetch join을 걸어놓지 않음
      */
     @OneToMany(mappedBy = "quiz")
-    List<QuizTag> quizTags = new ArrayList<>();
+    private List<QuizTag> quizTags = new ArrayList<>();
 
     @Builder
     public Quiz(int seq, int number, String title, QuizLevel quizLevel, String refSiteUrl, String refSiteDesc) {
