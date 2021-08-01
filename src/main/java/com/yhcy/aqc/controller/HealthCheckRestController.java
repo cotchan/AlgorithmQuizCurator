@@ -20,9 +20,8 @@ public class HealthCheckRestController {
     private final HealthCheckService healthCheckService;
 
     @Async
-    @GetMapping(path = "_hcheck")
-    public CompletableFuture<Long> healthCheck() throws InterruptedException {
-        logger.info("HealthCheckRestController::healthCheck {}", Thread.currentThread().getName());
+    @GetMapping(path = "hcheck")
+    public CompletableFuture<Long> healthCheck() {
         return CompletableFuture.completedFuture(healthCheckService.healthCheck());
     }
 }

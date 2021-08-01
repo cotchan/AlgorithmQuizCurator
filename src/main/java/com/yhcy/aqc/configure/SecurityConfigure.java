@@ -131,7 +131,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
                 // 보호되는 리소스를 정의합니다.
                 // permitAll은 '권한이 없는 누구라도 호출할 수 있다'라는 뜻.
                 // 위 이외의 모든 api는 User라는 권한이 있어야 합니다.
-                .antMatchers("/api/_hcheck").permitAll()
+                .antMatchers("/api/hcheck").permitAll()
                 .antMatchers("/api/user/join").permitAll()
                 .antMatchers("/api/user/login").permitAll()
                 .antMatchers("/api/**").hasRole(Role.USER.name())
