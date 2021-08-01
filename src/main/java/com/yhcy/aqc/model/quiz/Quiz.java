@@ -9,6 +9,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -36,6 +38,15 @@ public class Quiz extends CreateTimeEntity {
 
     @Column(nullable = false, name = "ref_site_desc")
     private String refSiteDesc;
+
+    /**
+     * Quiz <=> QuizTag 사이를 양방향 매핑으로 바꾸면서 생긴 new field
+     *
+     * 현재는 QuizState에서 Quiz를 통해 QuizTagType에 접근하기 위한 용도로만 사용한다.
+     * Quiz 단독으로 사용되는 쿼리에는 fetch join을 걸어놓지 않음
+     */
+    @OneToMany(mappedBy = "quiz")
+    private List<QuizTag> quizTags = new ArrayList<>();
 
     @Builder
     public Quiz(int seq, int number, String title, QuizLevel quizLevel, String refSiteUrl, String refSiteDesc) {
