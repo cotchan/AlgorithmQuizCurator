@@ -50,4 +50,13 @@ public interface QuizStateRepository extends JpaRepository<QuizState, Integer> {
 
     @Query(value = "SELECT qs FROM QuizState qs join fetch qs.quiz join fetch qs.quizStateType WHERE qs.user = ?1 and qs.quizStateType.desc = 'NOT_SELECTED'")
     List<QuizState> findAllNotSelectedProblems(User user);
+
+    /**
+     * For 통계처리
+     * '차트로 보기'에 해당하는 로직 처리를 위해 만들어놓은 인터페이스
+     * 특정 유저에 해당하는 QuizState 정보를 가져온다.
+     * 단, QuizState와 연관되어있는 Quiz의 QuizTag 정보도 전부 긁어오므로 통계 처리 목적으로만 사용한다.
+     */
+    @Query(value = "SELECT qs, qs.quiz, qs.quiz.quizTags FROM QuizState qs join fetch qs.user join fetch qs.quiz join fetch qs.quizStateType join fetch qs.quiz.quizTags qt join fetch qt.quizTagType WHERE qs.user = ?1")
+    List<QuizState> findAll(User user);
 }
