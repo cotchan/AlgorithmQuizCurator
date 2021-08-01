@@ -57,6 +57,6 @@ public interface QuizStateRepository extends JpaRepository<QuizState, Integer> {
      * 특정 유저에 해당하는 QuizState 정보를 가져온다.
      * 단, QuizState와 연관되어있는 Quiz의 QuizTag 정보도 전부 긁어오므로 통계 처리 목적으로만 사용한다.
      */
-    @Query(value = "SELECT qs, qs.quiz, qs.quiz.quizTags FROM QuizState qs join fetch qs.user join fetch qs.quiz join fetch qs.quizStateType join fetch qs.quiz.quizTags qt join fetch qt.quizTagType WHERE qs.user = ?1")
+    @Query(value = "SELECT distinct qs, qs.quiz, qs.quiz.quizTags FROM QuizState qs join fetch qs.user join fetch qs.quiz join fetch qs.quizStateType join fetch qs.quiz.quizTags qt join fetch qt.quizTagType WHERE qs.user = ?1")
     List<QuizState> findAll(User user);
 }
