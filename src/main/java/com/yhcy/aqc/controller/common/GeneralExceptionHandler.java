@@ -50,7 +50,6 @@ public class GeneralExceptionHandler {
             MissingServletRequestParameterException.class, MultipartException.class,
     })
     public ResponseEntity<?> handleBadRequestException(Exception e) {
-        log.debug("Bad request exception occurred: {}", e.getMessage(), e);
         return newResponse(e, HttpStatus.BAD_REQUEST);
     }
 

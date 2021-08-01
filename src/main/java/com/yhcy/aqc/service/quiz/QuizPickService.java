@@ -11,8 +11,6 @@ import com.yhcy.aqc.service.quiz.dao.QuizStateDaoService;
 import com.yhcy.aqc.service.quiz.dao.QuizStateTypeDaoService;
 import com.yhcy.aqc.service.user.dao.UserDaoService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +27,6 @@ import static java.util.stream.Collectors.toList;
 @Service
 @RequiredArgsConstructor
 public class QuizPickService {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final QuizStateTypeDaoService quizStateTypeDaoService;
     private final QuizStateDaoService quizStateService;
@@ -84,11 +80,9 @@ public class QuizPickService {
             final List<Quiz> pickProblems;
 
             if (candidateProblems.size() <= restProblemCnt) {
-                logger.debug("[notPickedProblem if] candidateProblems.size(): {}, restProblemCnt: {}", candidateProblems.size(), restProblemCnt);
                 //문제 set에서 안 뽑은 문제가 사용자가 뽑기로 한 문제 갯수보다 작은 경우 => List 그대로 반환
                 pickProblems = candidateProblems;
             } else {
-                logger.debug("[notPickedProblem else] candidateProblems.size(): {}, restProblemCnt: {}", candidateProblems.size(), restProblemCnt);
                 //문제 set에서 안 뽑은 문제가 사용자가 뽑기로 한 문제 갯수보다 많은 경우 => List 중 일부를 랜덤으로 뽑음
                 pickProblems = getRandomProblems(candidateProblems, restProblemCnt);
             }
@@ -112,13 +106,11 @@ public class QuizPickService {
         final List<QuizState> npnsProblems = quizStateService.getProblemsOfQSTState(user, QuizStateTypeEnum.NOT_PICKED);
 
         if (npnsProblems.size() < restProblemCnt) {
-            logger.debug("[npns if] npnsProblems.size(): {}, restProblemCnt: {}", npnsProblems.size(), restProblemCnt);
             //quiz_state 테이블에서 npns 상태인 문제가 사용자가 뽑기로 한 문제 갯수보다 적은 경우
             //npns 문제 갯수만큼 뽑아야 할 문제 갯수에서 차감하고 results에 추가한다.
             restProblemCnt -= npnsProblems.size();
             results = Stream.concat(results.stream(), npnsProblems.stream()).collect(toList());
         } else {
-            logger.debug("[npns else] npnsProblems.size(): {}, restProblemCnt: {}", npnsProblems.size(), restProblemCnt);
             //quiz_state 테이블에서 npns 상태인 문제가 사용자가 뽑기로 한 문제 갯수보다 많은 경우 => List 중에 일부를 랜덤으로 뽑는다.
             final List<QuizState> updateList = getRandomProblemsState(npnsProblems, restProblemCnt);
 
@@ -139,13 +131,9 @@ public class QuizPickService {
         update(npnsProblems, QuizStateTypeEnum.NOT_SELECTED);
 
         if (pnsProblems.size() < restProblemCnt) {
-            logger.debug("[pns if] pnsProblems.size(): {}, restProblemCnt: {}", pnsProblems.size(), restProblemCnt);
-
             //quiz_state 테이블에서 pns 상태인 문제가 사용자가 뽑기로 한 문제 갯수보다 적은 경우 => List에 그대로 추가
             results = Stream.concat(results.stream(), pnsProblems.stream()).collect(toList());
         } else {
-            logger.debug("[pns else] pnsProblems.size(): {}, restProblemCnt: {}", pnsProblems.size(), restProblemCnt);
-
             //quiz_state 테이블에서 pns 상태인 문제가 사용자가 뽑기로 한 문제 갯수보다 많은 경우 => List에서 일부를 랜덤으로 뽑는다.
             final List<QuizState> result = getRandomProblemsState(pnsProblems, restProblemCnt);
             results = Stream.concat(results.stream(), result.stream()).collect(toList());
