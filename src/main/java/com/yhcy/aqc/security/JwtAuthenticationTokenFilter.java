@@ -63,7 +63,7 @@ public class JwtAuthenticationTokenFilter extends GenericFilterBean {
                     log.debug("Jwt parse result: {}", claims);
 
                     // 만료 10분 전
-                    if (canRefresh(claims, 6000 * 10)) {
+                    if (canRefresh(claims, 10 * 60 * 1000)) {
                         String refreshedToken = jwt.refreshToken(authorizationToken);
                         response.setHeader(headerKey, refreshedToken);
                     }
