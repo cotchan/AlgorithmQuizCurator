@@ -133,3 +133,4 @@ gradle-app.setting
 .idea/libraries-with-intellij-classes.xml
 .idea/misc.xml
 .idea/vcs.xml
+log/debug.log

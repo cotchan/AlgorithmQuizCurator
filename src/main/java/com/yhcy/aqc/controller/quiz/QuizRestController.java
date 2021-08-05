@@ -67,4 +67,11 @@ public class QuizRestController {
                     .collect(toList())
         ));
     }
+
+    @Async
+    @GetMapping(value = "state-types")
+    public CompletableFuture<ApiResult<List<String>>> getQuizStateTypes() {
+
+        return null;
+    }
 }

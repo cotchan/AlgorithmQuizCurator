@@ -162,8 +162,8 @@ public class QuizStateDaoService {
             try {
                 result.add(
                         RankingListElement.builder()
-                        .user((User) rankingList.get(i)[0])
-                        .solvedCnt((Long) rankingList.get(i)[1])
+                        .user((User) rankingList.get(pageSize * (pageNo - 1) + i)[0])
+                        .solvedCnt((Long) rankingList.get(pageSize * (pageNo - 1) + i)[1])
                         .build()
                 );
             } catch (Exception e) {
@@ -182,12 +182,12 @@ public class QuizStateDaoService {
         List<RankingListElement> result = new LinkedList<>();
         for (int i = 0; i < pageSize; i++) {
             try {
-                if (rankingList.get(i)[1] == null)
+                if (rankingList.get(pageSize * (pageNo - 1) + i)[1] == null)
                     continue;
                 result.add(
                         RankingListElement.builder()
-                        .user((User) rankingList.get(i)[0])
-                        .accuracyRatio((Double) rankingList.get(i)[1])
+                        .user((User) rankingList.get(pageSize * (pageNo - 1) + i)[0])
+                        .accuracyRatio((Double) rankingList.get(pageSize * (pageNo - 1) + i)[1])
                         .build()
                 );
             } catch (Exception e) {
