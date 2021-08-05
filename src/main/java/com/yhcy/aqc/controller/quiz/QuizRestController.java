@@ -1,13 +1,17 @@
 package com.yhcy.aqc.controller.quiz;
 
 import com.yhcy.aqc.controller.common.ApiResult;
+import com.yhcy.aqc.controller.quiz.dto.QuizStateTypeResponse;
 import com.yhcy.aqc.controller.quiz.pick.QuizPickRequest;
 import com.yhcy.aqc.controller.quiz.pick.QuizPickResponse;
 import com.yhcy.aqc.controller.quiz.update.QuizStateUpdateRequest;
 import com.yhcy.aqc.controller.quiz.update.QuizStateUpdateResult;
+import com.yhcy.aqc.model.quiz.QuizStateType;
+import com.yhcy.aqc.model.quiz.QuizStateTypeEnum;
 import com.yhcy.aqc.security.JwtAuthentication;
 import com.yhcy.aqc.service.quiz.QuizCheckService;
 import com.yhcy.aqc.service.quiz.QuizPickService;
+import com.yhcy.aqc.service.quiz.dao.QuizStateTypeDaoService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
@@ -16,6 +20,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -31,6 +36,7 @@ public class QuizRestController {
 
     private final QuizPickService quizPickService;
     private final QuizCheckService quizCheckService;
+    private final QuizStateTypeDaoService quizStateTypeDaoService;
 
     @Async
     @GetMapping
@@ -70,8 +76,12 @@ public class QuizRestController {
 
     @Async
     @GetMapping(value = "state-types")
-    public CompletableFuture<ApiResult<List<String>>> getQuizStateTypes() {
-
-        return null;
+    public CompletableFuture<ApiResult<List<QuizStateTypeResponse>>> getQuizStateTypes() {
+        List<QuizStateType> quizStateTypes = quizStateTypeDaoService.findAll();
+        List<QuizStateTypeResponse> result = new LinkedList<>();
+        for (QuizStateType qst : quizStateTypes) {
+            result.add(new QuizStateTypeResponse(QuizStateTypeEnum.toCode(qst.getDesc()), qst.getDescKor()));
+        }
+        return CompletableFuture.completedFuture(OK(result));
     }
 }
