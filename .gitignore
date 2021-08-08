@@ -133,3 +133,11 @@ gradle-app.setting
 .idea/libraries-with-intellij-classes.xml
 .idea/misc.xml
 .idea/vcs.xml
+
+/node_modules
+/log
+/bin
+.classpath
+.project
+.settings/
+
