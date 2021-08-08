@@ -1,10 +1,11 @@
 import {React, useState} from "react";
 import {useDispatch} from "react-redux";
 import {loginUser} from "../../../_actions/user_action.js";
+import {withCookies} from "react-cookie";
 
 function SignIn(props) {
   const dispatch = useDispatch();
-  const [Id, setId] = useState("test004");
+  const [Id, setId] = useState("test005");
   const [Password, setPassword] = useState("!Q@W3e4r");
 
   const onIdHandler = (event) => {
@@ -21,9 +22,16 @@ function SignIn(props) {
     let body = {id: Id, pw: Password};
 
     dispatch(loginUser(body)).then((response) => {
-      console.log(response);
-      if (response.payload.success) {
+      let result = response.payload;
+      if (result.success) {
         alert("로그인 성공");
+
+        console.log("props", props);
+        props.setkeyCookie("key", result.response.api_token, {path: "/"});
+        props.setnameCookie("name", result.response.user.nickname, {
+          path: "/",
+        });
+
         props.history.push("/");
       } else {
         alert("id 또는 비밀번호가 일치하지 않습니다.");
@@ -152,4 +160,4 @@ function SignIn(props) {
   );
 }
 
-export default SignIn;
+export default withCookies(SignIn);

@@ -8,6 +8,7 @@ import {applyMiddleware, createStore} from "redux";
 import promiseMiddleware from "redux-promise";
 import ReduxThunk from "redux-thunk";
 import Reducer from "./_reducers";
+import {CookiesProvider} from "react-cookie";
 
 const createStoreWithMiddleware = applyMiddleware(
   promiseMiddleware,
@@ -23,10 +24,11 @@ ReactDOM.render(
     )}
   >
     <React.StrictMode>
-      <App />
+      <CookiesProvider>
+        <App />
+      </CookiesProvider>
     </React.StrictMode>
   </Provider>,
-
   document.getElementById("root")
 );
 

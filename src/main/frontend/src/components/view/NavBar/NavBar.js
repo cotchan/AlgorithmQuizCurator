@@ -1,6 +1,8 @@
-import React from "react";
+import {React, useEffect, useRef} from "react";
+import {withCookies, useCookies} from "react-cookie";
 
-function NavBar() {
+function NavBar(props) {
+  const {key, name} = props.cookiesInfo;
   return (
     <>
       <header
@@ -17,8 +19,13 @@ function NavBar() {
             style={{
               color: "#F30707",
               fontWeight: "bold",
-              fontSize: "24px",
+              fontSize: "32px",
               textDecoration: "none",
+              height: "100%",
+              width: "100%",
+              verticalAlign: "middle",
+              display: "flex",
+              alignItems: "center",
             }}
             href="/"
           >
@@ -29,20 +36,25 @@ function NavBar() {
           className="end"
           style={{flex: "none", marginLeft: "auto", display: "flex"}}
         >
-          <div style={{padding: "12px 40px"}}>
-            <a
-              href="/signin"
-              style={{
-                color: "#ffffff",
-                fontSize: "24px",
-                textDecoration: "none",
-                justifyContent: "flex-end",
-                alignContent: "center",
-              }}
-            >
-              <span style={{transform: "translateY(-25%)"}}>sign in</span>
-            </a>
-          </div>
+          {key ? (
+            ""
+          ) : (
+            <div style={{padding: "12px 40px"}}>
+              <a
+                href="/signin"
+                style={{
+                  color: "#ffffff",
+                  fontSize: "24px",
+                  textDecoration: "none",
+                  justifyContent: "flex-end",
+                  alignContent: "center",
+                }}
+              >
+                <span style={{transform: "translateY(-25%)"}}>sign in</span>
+              </a>
+            </div>
+          )}
+
           <div
             style={{
               background: "black",
@@ -55,7 +67,7 @@ function NavBar() {
             }}
           >
             <a
-              href="/signup"
+              href={`${key ? "/" : "/signup"}`}
               style={{
                 color: "#ffffff",
                 fontSize: "24px",
@@ -68,7 +80,9 @@ function NavBar() {
                 alignItems: "center",
               }}
             >
-              <span style={{transform: "translateY(-25%)"}}>sign up</span>
+              <span style={{transform: "translateY(-25%)"}}>
+                {key ? `${name}` : "sign up"}
+              </span>
             </a>
           </div>
         </div>
@@ -77,4 +91,4 @@ function NavBar() {
   );
 }
 
-export default NavBar;
+export default withCookies(NavBar);

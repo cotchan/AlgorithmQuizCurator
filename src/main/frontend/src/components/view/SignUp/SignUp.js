@@ -22,6 +22,7 @@ function SignUp(props) {
 
   let q_list = ["1", "2", "3"];
   useEffect(() => {
+    console.log("props", props);
     /**
      * veryfy question 받아오기
      */
