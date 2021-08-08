@@ -1,5 +1,6 @@
 package com.yhcy.aqc.controller.quiz;
 
+import com.yhcy.aqc.configure.support.Pageable;
 import com.yhcy.aqc.controller.common.ApiResult;
 import com.yhcy.aqc.controller.quiz.pick.QuizPickRequest;
 import com.yhcy.aqc.controller.quiz.pick.QuizPickResponse;
@@ -34,9 +35,9 @@ public class QuizRestController {
 
     @Async
     @GetMapping
-    public CompletableFuture<ApiResult<List<QuizPickResponse>>> getNotSelectedProblems(@AuthenticationPrincipal JwtAuthentication authentication) {
+    public CompletableFuture<ApiResult<List<QuizPickResponse>>> getNotSelectedProblems(@AuthenticationPrincipal JwtAuthentication authentication, Pageable pageable) {
         return CompletableFuture.completedFuture(
-            OK(quizCheckService.getNotSelectedProblems(authentication.seq)
+            OK(quizCheckService.getNotSelectedProblems(authentication.seq, pageable.offset(), pageable.limit())
                     .stream()
                     .map(QuizPickResponse::new)
                     .collect(toList())

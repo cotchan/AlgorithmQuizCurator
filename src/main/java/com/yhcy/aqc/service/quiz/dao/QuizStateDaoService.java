@@ -10,6 +10,7 @@ import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.repository.quiz.QuizStateRepository;
 import com.yhcy.aqc.service.user.dao.UserDaoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -127,9 +128,9 @@ public class QuizStateDaoService {
         return quizStateRepository.findByUserAndQuiz(user, quiz).orElseThrow(() -> new NotFoundException(QuizState.class, user, quiz));
     }
 
-    public List<QuizState> getNotSelectedProblems(final User user) {
+    public List<QuizState> getNotSelectedProblems(final User user, final int offset, final int limit) {
         checkArgument(user != null, "user must be not null");
-        return quizStateRepository.findAllNotSelectedProblems(user);
+        return quizStateRepository.findAllNotSelectedProblems(user, PageRequest.of(offset,limit));
     }
 
     /**

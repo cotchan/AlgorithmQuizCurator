@@ -3,6 +3,7 @@ package com.yhcy.aqc.repository.quiz;
 import com.yhcy.aqc.model.quiz.Quiz;
 import com.yhcy.aqc.model.quiz.QuizState;
 import com.yhcy.aqc.model.user.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -49,7 +50,7 @@ public interface QuizStateRepository extends JpaRepository<QuizState, Integer> {
     Optional<QuizState> findByUserAndQuiz(User user, Quiz quiz);
 
     @Query(value = "SELECT qs FROM QuizState qs join fetch qs.quiz join fetch qs.quizStateType WHERE qs.user = ?1 and qs.quizStateType.desc = 'NOT_SELECTED'")
-    List<QuizState> findAllNotSelectedProblems(User user);
+    List<QuizState> findAllNotSelectedProblems(User user, Pageable pageable);
 
     /**
      * For 통계처리
