@@ -6,6 +6,8 @@ import com.yhcy.aqc.repository.user.VerifyQuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkArgument;
 
 @RequiredArgsConstructor
@@ -27,5 +29,9 @@ public class VerifyQuestionDaoService {
             throw new IllegalArgumentException("invalid verify question index ["+ seqStr+"]");
         }
         return verifyQuestionRepository.findBySeq(seq).orElseThrow(() -> new NotFoundException(VerifyQuestion.class, seq));
+    }
+
+    public List<VerifyQuestion> findAll() {
+        return verifyQuestionRepository.findAll();
     }
 }

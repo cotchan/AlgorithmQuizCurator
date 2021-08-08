@@ -26,4 +26,8 @@ public class QuizStateTypeDaoService {
         QuizStateTypeEnum quizStateType = QuizStateTypeEnum.ofCode(code);
         return findByDesc(quizStateType);
     }
+
+    public List<QuizStateType> findAll() {
+        return quizStateTypeRepository.findAllStates();
+    }
 }
