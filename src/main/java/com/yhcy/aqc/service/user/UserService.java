@@ -91,23 +91,25 @@ public class UserService {
     public void mod(String userId, ModRequest modRequest) {
         //유저 조회 후 ID, 닉네임, 비밀번호를 제외한 정보 수정
         //인증 질문 변조 확인
-        if (!(modRequest.getVerifyQuestion() == null || modRequest.getVerifyQuestion().isEmpty())
-        || !(modRequest.getVerifyAnswer() == null || modRequest.getVerifyAnswer().isEmpty())) {
-            VerifyQuestion vq = verifyQuestionDaoService.findBySeq(modRequest.getVerifyQuestion());
-            userDaoService.updateUserByUserId(userId, vq, modRequest.getVerifyAnswer());
+        if (!(modRequest.getVerifyQuestion() == null || modRequest.getVerifyQuestion().trim().isEmpty())
+        || !(modRequest.getVerifyAnswer() == null || modRequest.getVerifyAnswer().trim().isEmpty())) {
+            VerifyQuestion vq = verifyQuestionDaoService.findBySeq(modRequest.getVerifyQuestion().trim());
+            userDaoService.updateUserByUserId(userId, vq, modRequest.getVerifyAnswer().trim());
         }
 
-        if (!(modRequest.getPw() == null || modRequest.getPw().isEmpty())) {
-            if (!modRequest.getPw().equals(modRequest.getPwConfirm()))
+        if (!(modRequest.getPw() == null || modRequest.getPw().trim().isEmpty())) {
+            if (modRequest.getPwConfirm() == null || modRequest.getPwConfirm().trim().isEmpty())
+                throw new IllegalArgumentException("empty user password confirm");
+            if (!modRequest.getPw().trim().equals(modRequest.getPwConfirm().trim()))
                 throw new IllegalArgumentException("user password and password confirm not matched");
             User user = userDaoService.findByUserId(userId);
             //비밀번호 해싱
             PasswordEncoder pe = new BCryptPasswordEncoder();
-            String encodedPassword = pe.encode(modRequest.getPw());
+            String encodedPassword = pe.encode(modRequest.getPw().trim());
             //이전에 사용했던 비밀번호인지 확인
             List<UserPassword> userPasswords = userPasswordDaoService.findByUser(user);
             for (UserPassword up : userPasswords) {
-                if (pe.matches(modRequest.getPw(), up.getPassword()))
+                if (pe.matches(modRequest.getPw().trim(), up.getPassword()))
                     throw new IllegalArgumentException("user password that have been used before");
             }
 
