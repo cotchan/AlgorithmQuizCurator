@@ -40,9 +40,9 @@ public class UserRestController {
     }
 
     @Async
-    @GetMapping("info/{userId}")
-    public CompletableFuture<ApiResult<UserInfoResponse>> getInfoProcess(@PathVariable("userId") String userId) {
-        User user = userService.getInfo(userId);
+    @GetMapping("info/")
+    public CompletableFuture<ApiResult<UserInfoResponse>> getInfoProcess(@AuthenticationPrincipal JwtAuthentication authentication) {
+        User user = userService.getInfo(authentication.userId);
         UserInfoResponse userInfoResponse = new UserInfoResponse(user);
         return CompletableFuture.completedFuture(ApiResult.OK(userInfoResponse));
     }
