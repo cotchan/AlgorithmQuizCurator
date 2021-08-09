@@ -88,30 +88,36 @@ public class UserService {
     }
 
     @Transactional
-    public void mod(ModRequest modRequest) {
-        //인증 질문 변조 확인
-        VerifyQuestion vq = verifyQuestionDaoService.findBySeq(modRequest.getVerifyQuestion());
-
+    public void mod(String userId, ModRequest modRequest) {
         //유저 조회 후 ID, 닉네임, 비밀번호를 제외한 정보 수정
-        userDaoService.updateUserByUserId(modRequest.getId(), vq, modRequest.getVerifyAnswer());
-
-        User user = userDaoService.findByUserId(modRequest.getId());
-        //비밀번호 해싱
-        PasswordEncoder pe = new BCryptPasswordEncoder();
-        String encodedPassword = pe.encode(modRequest.getPw());
-        //이전에 사용했던 비밀번호인지 확인
-        List<UserPassword> userPasswords = userPasswordDaoService.findByUser(user);
-        for (UserPassword up : userPasswords) {
-            if (pe.matches(modRequest.getPw(), up.getPassword()))
-                throw new IllegalArgumentException("user password that have been used before");
+        //인증 질문 변조 확인
+        if (!(modRequest.getVerifyQuestion() == null || modRequest.getVerifyQuestion().isEmpty())
+        || !(modRequest.getVerifyAnswer() == null || modRequest.getVerifyAnswer().isEmpty())) {
+            VerifyQuestion vq = verifyQuestionDaoService.findBySeq(modRequest.getVerifyQuestion());
+            userDaoService.updateUserByUserId(userId, vq, modRequest.getVerifyAnswer());
         }
 
-        UserPassword newUserPassword = UserPassword.builder()
-                .seq(null)
-                .user(user)
-                .password(encodedPassword)
-                .build();
-        userPasswordDaoService.saveUserPassword(newUserPassword);
+        if (!(modRequest.getPw() == null || modRequest.getPw().isEmpty())) {
+            if (!modRequest.getPw().equals(modRequest.getPwConfirm()))
+                throw new IllegalArgumentException("user password and password confirm not matched");
+            User user = userDaoService.findByUserId(userId);
+            //비밀번호 해싱
+            PasswordEncoder pe = new BCryptPasswordEncoder();
+            String encodedPassword = pe.encode(modRequest.getPw());
+            //이전에 사용했던 비밀번호인지 확인
+            List<UserPassword> userPasswords = userPasswordDaoService.findByUser(user);
+            for (UserPassword up : userPasswords) {
+                if (pe.matches(modRequest.getPw(), up.getPassword()))
+                    throw new IllegalArgumentException("user password that have been used before");
+            }
+
+            UserPassword newUserPassword = UserPassword.builder()
+                    .seq(null)
+                    .user(user)
+                    .password(encodedPassword)
+                    .build();
+            userPasswordDaoService.saveUserPassword(newUserPassword);
+        }
     }
 
     public User login(String userId, String password) {
@@ -119,7 +125,7 @@ public class UserService {
         //비밀번호 매치 확인
         PasswordEncoder pe = new BCryptPasswordEncoder();
         List<UserPassword> userPasswords = userPasswordDaoService.findByUser(user);
-        UserPassword userPassword = userPasswords.get(userPasswords.size() - 1);
+        UserPassword userPassword = userPasswords.get(0);
         if (!pe.matches(password, userPassword.getPassword()))
             throw new IllegalArgumentException("user password not matched");
         return user;

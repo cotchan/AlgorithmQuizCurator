@@ -18,7 +18,7 @@ public class VerifyQuestionDaoService {
 
     public VerifyQuestion findBySeq(final int seq) {
         checkArgument(seq > 0, "seq must be positive number");
-        return verifyQuestionRepository.findBySeq(seq).orElseThrow(() -> new NotFoundException(VerifyQuestion.class, seq));
+        return verifyQuestionRepository.findBySeq(seq).orElseThrow(() -> new IllegalArgumentException("invalid verify question index ["+ seq+"]"));
     }
 
     public VerifyQuestion findBySeq(final String seqStr) {
@@ -28,7 +28,7 @@ public class VerifyQuestionDaoService {
         } catch (Exception e) {
             throw new IllegalArgumentException("invalid verify question index ["+ seqStr+"]");
         }
-        return verifyQuestionRepository.findBySeq(seq).orElseThrow(() -> new NotFoundException(VerifyQuestion.class, seq));
+        return verifyQuestionRepository.findBySeq(seq).orElseThrow(() -> new IllegalArgumentException("invalid verify question index ["+ seq+"]"));
     }
 
     public List<VerifyQuestion> findAll() {

@@ -5,6 +5,7 @@ import com.yhcy.aqc.controller.user.dto.JoinRequest;
 import com.yhcy.aqc.controller.user.dto.ModRequest;
 import com.yhcy.aqc.controller.user.dto.UserInfoResponse;
 import com.yhcy.aqc.controller.user.dto.VerifyQuestionResponse;
+import com.yhcy.aqc.error.UnauthorizedException;
 import com.yhcy.aqc.model.user.User;
 import com.yhcy.aqc.model.user.VerifyQuestion;
 import com.yhcy.aqc.security.JwtAuthentication;
@@ -40,7 +41,7 @@ public class UserRestController {
     }
 
     @Async
-    @GetMapping("info/")
+    @GetMapping("info")
     public CompletableFuture<ApiResult<UserInfoResponse>> getInfoProcess(@AuthenticationPrincipal JwtAuthentication authentication) {
         User user = userService.getInfo(authentication.userId);
         UserInfoResponse userInfoResponse = new UserInfoResponse(user);
@@ -49,8 +50,9 @@ public class UserRestController {
 
     @Async
     @PostMapping("info")
-    public CompletableFuture<ApiResult<Void>> modInfoProcess(@RequestBody ModRequest modUser) {
-        userService.mod(modUser);
+    public CompletableFuture<ApiResult<Void>> modInfoProcess(@AuthenticationPrincipal JwtAuthentication authentication,
+                                                             @RequestBody ModRequest modUser) {
+        userService.mod(authentication.userId, modUser);
         return CompletableFuture.completedFuture(ApiResult.OK(null));
     }
 
