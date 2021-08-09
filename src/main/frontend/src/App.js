@@ -1,7 +1,7 @@
 import "./App.css";
 
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
-import {React, useEffect} from "react";
+import {React} from "react";
 
 import Navbar from "./components/view/NavBar/NavBar.js";
 import SignIn from "./components/view/SignIn/SignIn.js";
@@ -10,17 +10,11 @@ import RandomPage from "./components/view/RandomPage/RandomPage";
 import RandomListPage from "./components/view/RandomListPage/RandomListPage";
 import MyProblemList from "./components/view/MyProblemList/MyProblemList";
 import MyChart from "./components/view/MyChart/MyChart";
-import {withCookies, Cookies, useCookies} from "react-cookie";
+import {useCookies} from "react-cookie";
 
 function App() {
   const [keycookies, setkeyCookie, removekeyCookie] = useCookies(["key"]);
   const [namecookies, setnameCookie, removenameCookie] = useCookies(["name"]);
-
-  // test;
-  useEffect(() => {
-    removekeyCookie("key");
-    removenameCookie("name");
-  }, []);
 
   return (
     <Router>

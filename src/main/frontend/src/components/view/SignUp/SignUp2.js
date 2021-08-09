@@ -1,6 +1,17 @@
-import React from "react";
+import {React, useState} from "react";
+import {useDispatch} from "react-redux";
+
+import {doubleCheckerNick} from "../../../_actions/user_action.js";
 
 function SignUp2(props) {
+  const tag = "signup2";
+
+  const dispatch = useDispatch();
+
+  const [IsValidNick, setIsValidNick] = useState(false);
+  const [IsValidA, setIsValidA] = useState(false);
+  const [Checked, setChecked] = useState(false);
+
   const onSubmitHandler = (event) => {
     /**
      * 폼 확인
@@ -13,8 +24,29 @@ function SignUp2(props) {
     if (!props.info.verify_answer) {
       return alert("비밀번호 확인 대답을 작성해주세요.");
     }
+    if (!IsValidNick) {
+      return;
+    }
+    if (!Checked) {
+      return;
+    }
+    if (!IsValidA) {
+      return;
+    }
 
     props.onSubmit(event);
+  };
+
+  const onChangeNickHandler = (event) => {
+    let nick = event.target.value;
+    props.changeNick(nick);
+    setChecked(false);
+
+    if (nick.length >= 2) {
+      setIsValidNick(true);
+    } else {
+      setIsValidNick(false);
+    }
   };
 
   const onChangeQuestionHandler = (event) => {
@@ -22,7 +54,32 @@ function SignUp2(props) {
   };
 
   const onChangeAnswerHandler = (event) => {
-    props.changeA(event.target.value);
+    let answer = event.target.value;
+    props.changeA(answer);
+
+    if (answer.length >= 1) {
+      setIsValidA(true);
+    } else {
+      setIsValidA(false);
+    }
+  };
+
+  const onDoubleCheckHanlder = (event) => {
+    event.preventDefault();
+
+    let nick = props.info.nickname;
+
+    dispatch(doubleCheckerNick(nick)).then((response) => {
+      console.log(tag, response.payload);
+      if (response.payload.success) {
+        setChecked(true);
+        console.log("nick true");
+      } else {
+        setChecked(false);
+      }
+    });
+
+    setChecked(true);
   };
 
   return (
@@ -64,7 +121,7 @@ function SignUp2(props) {
           boxSizing: "border-box",
           margin: "16px 0",
           width: "100%",
-          height: "280px",
+          height: "360px",
           alignItems: "center",
           backgroundColor: "#26249E",
           padding: "24px",
@@ -76,15 +133,50 @@ function SignUp2(props) {
           onSubmit={onSubmitHandler}
         >
           <label style={{color: "#FFFFFF", marginBottom: "7px"}}>
+            Nickname{" "}
+            <span className="valid_id" style={{color: "red", fontSize: "10px"}}>
+              {IsValidNick ? "" : "두 글자 이상"}
+            </span>
+          </label>
+
+          <div
+            style={{
+              display: "flex",
+              flex: "auto",
+              marginBottom: "14px",
+              width: "100%",
+            }}
+          >
+            <input
+              type="text"
+              value={props.info.nick}
+              onChange={onChangeNickHandler}
+              style={{
+                borderRadius: "16px",
+                width: "100%",
+                padding: "7px",
+              }}
+            />
+            <button
+              type="submit"
+              style={{
+                padding: "7px",
+                borderRadius: "16px",
+                height: "100%",
+              }}
+              onClick={onDoubleCheckHanlder}
+            >
+              double check
+            </button>
+          </div>
+          <label style={{color: "#FFFFFF", marginBottom: "7px"}}>
             Question
           </label>
           <select
-            name="pets"
-            id="pet-select"
             style={{
+              flex: "auto",
               marginBottom: "14px",
               width: "100%",
-              height: "32px",
               padding: "7px",
               borderRadius: "16px",
             }}
@@ -93,36 +185,42 @@ function SignUp2(props) {
             <option
               style={{
                 borderRadius: "16px",
-                height: "32px",
               }}
-              selected
-              value=""
+              defaultValue="질문을 선택해주세요"
             >
               질문을 선택해주세요
             </option>
-            {props.info.q_list.map((question) => {
+            {props.info.qlist.map((question) => {
               return (
                 <option
                   style={{
                     borderRadius: "16px",
-                    height: "32px",
                   }}
-                  value={question}
+                  value={question.code}
+                  key={question.code}
                 >
-                  {question}
+                  {question.desc}
                 </option>
               );
             })}
           </select>
 
-          <label style={{color: "#FFFFFF", marginBottom: "7px"}}>Answer</label>
+          <label style={{color: "#FFFFFF", marginBottom: "7px"}}>
+            Answer{" "}
+            <span
+              className="valid_answer"
+              style={{color: "red", fontSize: "10px"}}
+            >
+              {IsValidA ? "" : "한 글자 이상"}
+            </span>
+          </label>
           <input
             type="text"
             style={{
               borderRadius: "16px",
-              height: "32px",
               marginBottom: "14px",
               padding: "7px",
+              flex: "auto",
             }}
             value={props.info.verify_answer}
             onChange={onChangeAnswerHandler}

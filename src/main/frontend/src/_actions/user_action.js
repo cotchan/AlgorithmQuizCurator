@@ -1,4 +1,10 @@
-import {LOGIN_USER, JOIN_USER, GET_QUESTION, DOUBLE_CHECK_ID} from "./types.js";
+import {
+  LOGIN_USER,
+  JOIN_USER,
+  GET_QUESTION,
+  DOUBLE_CHECK_ID,
+  DOUBLE_CHECK_NICK,
+} from "./types.js";
 import axios from "axios";
 
 export function loginUser(dataToSubmit) {
@@ -16,7 +22,9 @@ export function loginUser(dataToSubmit) {
 
 export function joinUser(dataToSubmit) {
   const request = axios
-    .post("/api/user/join", dataToSubmit)
+    .post("/api/user/join", dataToSubmit, {
+      headers: {"Content-Type": `application/json`},
+    })
     .then((response) => response.data);
   return {
     type: JOIN_USER,
@@ -26,8 +34,8 @@ export function joinUser(dataToSubmit) {
 
 export function getQuestion() {
   const request = axios
-    .post("/api/user/verify-questions", {})
-    .then((response) => response);
+    .get("/api/user/verify-questions")
+    .then((response) => response.data);
 
   return {
     type: GET_QUESTION,
@@ -37,11 +45,22 @@ export function getQuestion() {
 
 export function doubleCheckerID(userId) {
   const request = axios
-    .post(`/api/user/dup-check-by-userId/${userId}`)
-    .then((response) => response);
+    .get(`/api/user/dup-check-by-userId/${userId}`)
+    .then((response) => response.data);
 
   return {
     type: DOUBLE_CHECK_ID,
+    payload: request,
+  };
+}
+
+export function doubleCheckerNick(nick) {
+  const request = axios
+    .get(`/api/user/dup-check-by-nickname/${nick}`)
+    .then((response) => response.data);
+
+  return {
+    type: DOUBLE_CHECK_NICK,
     payload: request,
   };
 }

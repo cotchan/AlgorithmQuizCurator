@@ -5,9 +5,10 @@ import {doubleCheckerID} from "../../../_actions/user_action.js";
 import {idinfo, pwInfo, confirm_info} from "../../../constants/announcement.js";
 
 function SignUp1(props) {
+  const tag = "SignUp1";
+
   const idRe = /^[a-z][a-z|_|\\-|0-9]{4,19}$/;
-  const pwRe =
-    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
+  const pwRe = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
 
   const [IsValidId, setIsValidId] = useState(false);
   const [IsValidPw, setIsValidPw] = useState(false);
@@ -18,7 +19,7 @@ function SignUp1(props) {
 
   const onIdHandler = (event) => {
     let curId = event.currentTarget.value;
-    props.changeId(event.currentTarget.value);
+    props.changeId(curId);
     setChecked(false);
 
     if (idRe.exec(curId)) {
@@ -75,7 +76,9 @@ function SignUp1(props) {
     event.preventDefault();
     let curId = props.info.id;
 
-    dispatch(doubleCheckerID(curId)).then((response) => {});
+    dispatch(doubleCheckerID(curId)).then((response) => {
+      console.log(tag, response.payload);
+    });
 
     setChecked(true);
   };
@@ -137,9 +140,8 @@ function SignUp1(props) {
           <div
             style={{
               display: "flex",
-              flex: "4 1",
+              flex: "auto",
               marginBottom: "14px",
-              height: "100%",
               width: "100%",
             }}
           >
@@ -150,7 +152,6 @@ function SignUp1(props) {
               style={{
                 borderRadius: "16px",
                 width: "100%",
-                height: "12px",
                 padding: "7px",
               }}
             />
@@ -159,7 +160,7 @@ function SignUp1(props) {
               style={{
                 padding: "7px",
                 borderRadius: "16px",
-                height: "20px",
+                height: "100%",
               }}
               onClick={onDoubleCheckHanlder}
             >
@@ -168,16 +169,19 @@ function SignUp1(props) {
           </div>
 
           <label style={{color: "#FFFFFF", marginBottom: "7px"}}>
-            pw{" "}
-            <span className="valid_pw" style={{color: "red", fontSize: "10px"}}>
+            PW{" "}
+            <span
+              className="valid_pw"
+              style={{color: "red", fontSize: "10px", width: "100%"}}
+            >
               {IsValidPw ? "" : pwInfo}
             </span>
           </label>
           <input
             type="password"
             style={{
+              flex: "auto",
               borderRadius: "16px",
-              height: "12px",
               marginBottom: "14px",
               padding: "7px",
             }}
@@ -193,8 +197,8 @@ function SignUp1(props) {
           <input
             type="password"
             style={{
+              flex: "auto",
               borderRadius: "16px",
-              height: "12px",
               marginBottom: "14px",
               padding: "7px",
             }}

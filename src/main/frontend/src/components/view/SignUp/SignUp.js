@@ -10,26 +10,27 @@ function SignUp(props) {
 
   const dispatch = useDispatch();
 
-  const [id, setid] = useState("id");
-  const [pw, setpw] = useState("pw");
+  const [id, setid] = useState("abcd1234");
+  const [pw, setpw] = useState("abcd1234!");
   const [verify_answer, setverify_answer] = useState("answer");
 
-  /** 추가 예정 */
   const [nickname, setnickname] = useState("nickname");
   const [verify_question, setverify_question] = useState("question");
+  const [qlist, setqlist] = useState([]);
 
   const [Next, setNext] = useState("true");
 
-  let q_list = ["1", "2", "3"];
   useEffect(() => {
     console.log("props", props);
     /**
      * veryfy question 받아오기
      */
     dispatch(getQuestion()).then((response) => {
-      if (response.payload.loginSuccess) {
-        alert("로그인 성공");
-        props.history.push("/");
+      let result = response.payload;
+      console.log(tag, result);
+
+      if (response.payload.success) {
+        setqlist(result.response);
       } else {
         alert("Error");
       }
@@ -47,6 +48,9 @@ function SignUp(props) {
   };
   const onChangeQuestionHandler = (changedQuestion) => {
     setverify_question(changedQuestion);
+  };
+  const onChangeNickHandler = (nick) => {
+    setnickname(nick);
   };
 
   const onNextClickHandler = (event) => {
@@ -68,13 +72,16 @@ function SignUp(props) {
     let body = {
       id,
       pw,
+      pw_confirm: pw,
       nickname,
       verify_question,
       verify_answer,
     };
 
+    console.log(tag, "body", body);
+
     dispatch(joinUser(body)).then((response) => {
-      if (response.payload.joinSuccess) {
+      if (response.payload.success) {
         alert("회원가입 성공");
         props.history.push("/");
       } else {
@@ -94,10 +101,11 @@ function SignUp(props) {
     />
   ) : (
     <SignUp2
-      info={{q_list, verify_answer, verify_question}}
+      info={{qlist, verify_answer, verify_question, nickname}}
       onSubmit={onSubmitHandler}
       changeQ={onChangeQuestionHandler}
       changeA={onChangeAnswerHandler}
+      changeNick={onChangeNickHandler}
     />
   );
 }

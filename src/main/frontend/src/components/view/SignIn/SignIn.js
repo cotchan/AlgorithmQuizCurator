@@ -1,4 +1,4 @@
-import {React, useState} from "react";
+import {React, useState, useEffect} from "react";
 import {useDispatch} from "react-redux";
 import {loginUser} from "../../../_actions/user_action.js";
 import {withCookies} from "react-cookie";
@@ -7,6 +7,14 @@ function SignIn(props) {
   const dispatch = useDispatch();
   const [Id, setId] = useState("test005");
   const [Password, setPassword] = useState("!Q@W3e4r");
+  const {key, name} = props.cookiesInfo;
+
+  //to-do: auth hoc 추가 예정
+  useEffect(() => {
+    if (key) {
+      props.history.push("/");
+    }
+  }, []);
 
   const onIdHandler = (event) => {
     setId(event.currentTarget.value);
