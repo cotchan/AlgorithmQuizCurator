@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class ModRequest {
     private String pw;
     private String pwConfirm;
-    private String verifyQuestion;
+    private Integer verifyQuestion;
     private String verifyAnswer;
 }

@@ -14,6 +14,6 @@ public class JoinRequest {
     private String pw;
     private String pwConfirm;
     private String nickname;
-    private String verifyQuestion;
+    private Integer verifyQuestion;
     private String verifyAnswer;
 }

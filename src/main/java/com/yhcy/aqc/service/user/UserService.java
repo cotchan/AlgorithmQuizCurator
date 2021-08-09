@@ -50,6 +50,9 @@ public class UserService {
             throw new IllegalArgumentException("invalid user nickname ["+ joinRequest.getNickname()+"]");
         }
 
+        if (joinRequest.getVerifyQuestion() == null)
+            throw new IllegalArgumentException("empty verify question");
+
         if (joinRequest.getVerifyAnswer() == null || joinRequest.getVerifyAnswer().trim().length() == 0) {
             throw new IllegalArgumentException("invalid verify question answer ["+ joinRequest.getVerifyAnswer()+"]");
         }
@@ -91,9 +94,9 @@ public class UserService {
     public void mod(String userId, ModRequest modRequest) {
         //유저 조회 후 ID, 닉네임, 비밀번호를 제외한 정보 수정
         //인증 질문 변조 확인
-        if (!(modRequest.getVerifyQuestion() == null || modRequest.getVerifyQuestion().trim().isEmpty())
+        if (!(modRequest.getVerifyQuestion() == null)
         || !(modRequest.getVerifyAnswer() == null || modRequest.getVerifyAnswer().trim().isEmpty())) {
-            VerifyQuestion vq = verifyQuestionDaoService.findBySeq(modRequest.getVerifyQuestion().trim());
+            VerifyQuestion vq = verifyQuestionDaoService.findBySeq(modRequest.getVerifyQuestion());
             userDaoService.updateUserByUserId(userId, vq, modRequest.getVerifyAnswer().trim());
         }
 
