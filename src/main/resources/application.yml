@@ -16,7 +16,6 @@ spring:
   jackson:
     property-naming-strategy: SNAKE_CASE
 
-
 server:
   port: 8080
 
@@ -26,6 +25,11 @@ jwt:
     issuer: algorithm_quiz_curator
     clientSecret: yhcycyyh
     expirySeconds: 3600
+
+custom:
+  pageable:
+    offset: 0
+    limit: 5
 
 async:
   thread:

@@ -51,8 +51,8 @@ public class QuizCheckService {
         return results;
     }
 
-    public List<QuizState> getNotSelectedProblems(final int userSeq) {
+    public List<QuizState> getNotSelectedProblems(final int userSeq, final int offset, final int limit) {
         final User user = userDaoService.findById(userSeq);
-        return quizStateService.getNotSelectedProblems(user);
+        return quizStateService.getNotSelectedProblems(user, offset, limit);
     }
 }
