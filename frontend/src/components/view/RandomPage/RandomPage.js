@@ -1,26 +1,34 @@
 import React, {useState} from "react";
-import {useEffect} from "react";
-import axios from "axios";
+import {useDispatch} from "react-redux";
+import {getRandomQ} from "../../../_actions/ps_action";
 import {ReactComponent as RandomBtn} from "../../../img/RandomBtn.svg";
 
-function RandomPage() {
+function RandomPage(props) {
+  const tag = "RandomPage";
   const [Hover, setHover] = useState(false);
+  const [Rnum, setRnum] = useState(0);
+  const dispatch = useDispatch();
 
   const toggleHover = () => setHover(!Hover);
+  const onChangeHandler = (e) => setRnum(e.target.value);
 
-  useEffect(() => {
-    console.log("response");
+  const onClickHandler = () => {
+    let input = parseInt(Rnum);
 
-    axios.get("/api/hcheck").then((response) => {
-      console.log(response);
-    });
-  }, []);
-
-  const onClickHandler = (event) => {
-    console.log("onclick");
-    /**
-     * 랜덤 버튼
-     */
+    if (Number.isInteger(input)) {
+      /**
+       *랜덤 문제 가져오기
+       */
+      let body = {problem_cnt: input};
+      let key = props.cookiesInfo.key;
+      dispatch(getRandomQ(body, key)).then((response) => {
+        let result = response.payload;
+        if (result.success) {
+          // console.log(tag, result.response);
+          props.setPlist(result.response);
+        }
+      });
+    }
   };
 
   return (
@@ -86,6 +94,7 @@ function RandomPage() {
               height: "80%",
               fontSize: "42px",
             }}
+            onChange={onChangeHandler}
           />
           <span style={{fontSize: "42px"}}>개</span>
         </div>

@@ -151,3 +151,174 @@ button:focus {
 input:focus {
   outline: none;
 }
+
+header {
+  display: flex;
+  justify-content: space-between;
+  background-color: #4d4acf;
+  height: 64px;
+  padding: 24px 42px;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+}
+
+#logo {
+  color: #f30707;
+  font-weight: bold;
+  font-size: 32px;
+  text-decoration: none;
+  height: 100%;
+  width: 100%;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+}
+
+.navigation a {
+  color: #ffffff;
+  font-size: 24px;
+  text-decoration: none;
+  justify-content: flex-end;
+  align-content: center;
+  margin-right: 20px;
+}
+
+.signin a {
+  color: #ffffff;
+  font-size: 24px;
+  text-decoration: none;
+  justify-content: flex-end;
+  align-content: center;
+  margin-right: 20px;
+}
+
+.login {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border: 3px black solid;
+  text-align: center;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.logout {
+  display: flex;
+  align-items: center;
+  background-color: black;
+  text-align: center;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.login a,
+.logout a {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  text-decoration: none;
+  height: 100%;
+  width: 100%;
+  padding: 12px 40px;
+  vertical-align: middle;
+}
+
+.login a {
+  color: black;
+}
+.logout a {
+  color: white;
+}
+
+.problem-info {
+}
+
+.problem {
+  display: flex;
+  align-items: center;
+  height: 86px;
+  background: #c4c4c4;
+  border-radius: 71px;
+}
+
+.quiz_level {
+  background: #6fcf97;
+  border-radius: 100px;
+}
+
+.quiz_url_desc {
+  background: orange;
+  border-radius: 100px;
+}
+
+.psinfo {
+  width: 115px;
+  height: 42px;
+  margin-left: 22px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 160%;
+  text-align: center;
+}
+
+.problemlist li {
+  margin-bottom: 39px;
+}
+.problem a {
+  font-size: 48px;
+  font-weight: bold;
+  color: #333333;
+  text-decoration: none;
+  margin-left: 96px;
+  line-height: 140.62%;
+}
+
+.problem-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 54px;
+  border-bottom: 3px white solid;
+}
+
+.problem-length {
+  font-size: 48px;
+  color: white;
+  font-weight: bold;
+  margin-bottom: 15px;
+  margin-left: 15px;
+}
+
+.pslist-link {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: right;
+}
+
+.pslist-link a {
+  text-decoration: none;
+  color: #65cc35;
+}
+
+.rerandom {
+  display: flex;
+  align-items: center;
+}
+
+.rerandom span {
+  font-size: 32px;
+  font-weight: bold;
+  color: #bdbdbd;
+}
+
+.rerandom .randombtn {
+  width: 53px;
+  height: 37px;
+}
+
+.active {
+  color: white;
+}

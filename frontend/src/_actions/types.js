@@ -4,3 +4,5 @@ export const AUTH_USER = "auth_user";
 export const GET_QUESTION = "get_quesiton";
 export const DOUBLE_CHECK_ID = "doubleCheck_ID";
 export const DOUBLE_CHECK_NICK = "doubleCheck_NICK";
+export const GET_RANDOWMQ = "get_randomQ";
+export const GET_UNSELECTQ = "get_unselectedQ";

@@ -12,7 +12,6 @@ export function loginUser(dataToSubmit) {
     .post("/api/user/login", dataToSubmit)
     .then((response) => response.data)
     .catch((error) => error);
-  console.log("userACTION");
 
   return {
     type: LOGIN_USER,

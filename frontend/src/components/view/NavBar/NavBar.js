@@ -1,85 +1,46 @@
-import {React, useEffect, useRef} from "react";
-import {withCookies, useCookies} from "react-cookie";
+import React from "react";
+import {withCookies} from "react-cookie";
 
 function NavBar(props) {
   const {key, name} = props.cookiesInfo;
+
   return (
     <>
-      <header
-        className="sticky"
-        style={{
-          display: "flex",
-          backgroundColor: "#4D4ACF",
-          height: "64px",
-          padding: "24px 42px",
-        }}
-      >
-        <div style={{flex: "none"}}>
-          <a
-            style={{
-              color: "#F30707",
-              fontWeight: "bold",
-              fontSize: "32px",
-              textDecoration: "none",
-              height: "100%",
-              width: "100%",
-              verticalAlign: "middle",
-              display: "flex",
-              alignItems: "center",
-            }}
-            href="/"
-          >
+      <header className="sticky">
+        <div>
+          <a id="logo" href="/">
             ALGOL
           </a>
         </div>
-        <div
-          className="end"
-          style={{flex: "none", marginLeft: "auto", display: "flex"}}
-        >
+        <div className="end" style={{display: "flex"}}>
           {key ? (
-            ""
+            <ul className="navigation">
+              <li>
+                <a href="/random">Random</a>
+              </li>
+              <li>
+                <a href="/randomlist">Result</a>
+              </li>
+              <li>
+                <a href="/mypslist">PsList</a>
+              </li>
+              <li>
+                <a href="/mychart">My Chart</a>
+              </li>
+              <li>
+                <a href="/rank">Ranking</a>
+              </li>
+            </ul>
           ) : (
-            <div style={{padding: "12px 40px"}}>
-              <a
-                href="/signin"
-                style={{
-                  color: "#ffffff",
-                  fontSize: "24px",
-                  textDecoration: "none",
-                  justifyContent: "flex-end",
-                  alignContent: "center",
-                }}
-              >
+            <div className="signin" style={{padding: "12px 40px"}}>
+              <a href="/signin">
                 <span style={{transform: "translateY(-25%)"}}>sign in</span>
               </a>
             </div>
           )}
 
-          <div
-            style={{
-              background: "black",
-              color: "white",
-              textAlign: "center",
-              borderRadius: "5px",
-              display: "flex",
-              alignItems: "center",
-              boxSizing: "border-box",
-            }}
-          >
-            <a
-              href={`${key ? "/" : "/signup"}`}
-              style={{
-                color: "#ffffff",
-                fontSize: "24px",
-                textDecoration: "none",
-                height: "100%",
-                width: "100%",
-                padding: "12px 40px",
-                verticalAlign: "middle",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
+          <div className={`${key ? "login" : "logout"}`}>
+            <a href={`${key ? "/mypage" : "/signup"}`}>
               <span style={{transform: "translateY(-25%)"}}>
                 {key ? `${name}` : "sign up"}
               </span>
