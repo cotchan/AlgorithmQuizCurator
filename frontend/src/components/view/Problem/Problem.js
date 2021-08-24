@@ -1,21 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 function Problem(props) {
   const tag = "Problem";
+  const [state, setState] = useState("");
 
   const {
     quiz_title,
     quiz_url,
     quiz_url_desc,
     quiz_state_type,
+    quiz_state_code,
     quiz_level,
     quiz_number,
   } = props.problem;
 
-  //임시
+  /**
+   * 임시 코드
+   */
   const quiz_desc = quiz_url_desc.includes("Baekjoon Online Judge")
     ? "백준"
     : "";
+
+    useEffect(()=>{
+      if(!quiz_state_type){
+        Object.entries(props.stateTypes).forEach(([key, value]) => {
+          if(value == quiz_state_code){
+            console.log("TYPE", key);
+            setState(key)
+          }
+        })
+        return;
+      }
+      setState(quiz_state_type)
+      
+    }, [props])
+  
 
   const onChange = (e) => {
     // console.log(tag, "onchange");
@@ -29,16 +48,12 @@ function Problem(props) {
     >
       <a href={quiz_url}>{quiz_title}</a>
       <div style={{display: "flex", marginRight: "43px"}}>
-        <select style={{width: "198px"}} onChange={onChange}>
+        <select style={{width: "198px"}} onChange={onChange} value={state} defaultValue={state}>
           {Object.keys(props.stateTypes).map((type) => {
-            if (quiz_state_type === type) {
-              <option key={quiz_number} defaultValue={type}>
-                {type}
-              </option>;
-            }
-            return <option value={type}>{type}</option>;
+            return <option key={quiz_number} value={type}>{type}</option>;
           })}
         </select>
+
         <div className="psinfo quiz_level">{quiz_level}</div>
         <div className="psinfo quiz_url_desc">{quiz_desc}</div>
       </div>

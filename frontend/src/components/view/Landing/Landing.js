@@ -13,6 +13,7 @@ function Landing(props) {
   const [IsEmpty, setIsEmpty] = useState(false);
   const [cookies, setCookie] = useCookies(["key"]);
 
+  /**todo: 캐시 기능 추가하기 */
   useEffect(() => {
     const key = cookies.key;
     console.log(tag, Plist, key);

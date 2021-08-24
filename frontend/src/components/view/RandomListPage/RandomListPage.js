@@ -1,5 +1,5 @@
 import {React, useEffect, useState} from "react";
-import Problem from "./Problem/Problem";
+import Problem from "../Problem/Problem";
 import axios from "axios";
 import {useCookies} from "react-cookie";
 import {ReactComponent as RandomBtn} from "../../../img/RandomBtn.svg";
