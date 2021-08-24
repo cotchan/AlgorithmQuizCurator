@@ -4,6 +4,7 @@ import axios from "axios";
 import { formatRelativeDate } from "../../../utils/format";
 import charImg from "../../../img/chart.png";
 import List from "../List/List";
+import SolvedList from "../List/SolvedList";
 import UnSolvedSection from "./UnSolvedSection/UnSolvedSection";
 
 function MyProblemList() {
@@ -15,8 +16,8 @@ function MyProblemList() {
   const [SelectedTab, setSelectedTab] = useState("전체 목록");
 
   /* state 별 분류*/
-  const [SolvedList, setSolvedList] = useState([]);
-  const [NotSolvedList, setNotSolvedList] = useState([]);
+  const [SolvedArr, setSolvedArr] = useState([]);
+  const [NotSolvedArr, setNotSolvedArr] = useState([]);
   const [NtcList, setNtcList] = useState([]);
   const [TimeOverList, setTimeOverList] = useState([]);
 
@@ -43,8 +44,8 @@ function MyProblemList() {
            */
 
           // 전체 목록
-          const notSolvedList = [];
-          const solvedList = [];
+          const notSolvedArr = [];
+          const solvedArr = [];
           const ntcList = [];
           const timeOverList = [];
 
@@ -57,20 +58,20 @@ function MyProblemList() {
                 ntcList.push(ps);
                 break;
               case 3:
-                notSolvedList.push(ps);
+                notSolvedArr.push(ps);
                 break;
               case 4:
                 timeOverList.push(ps);
                 break;
               case 5:
-                solvedList.push(ps);
+                solvedArr.push(ps);
                 break;
               default:
             }
           });
 
-          setSolvedList(solvedList);
-          setNotSolvedList(notSolvedList);
+          setSolvedArr(timeOverList); //임시
+          setNotSolvedArr(notSolvedArr);
           setNtcList(ntcList);
           setTimeOverList(timeOverList);
         }
@@ -115,13 +116,17 @@ function MyProblemList() {
             setNtcList={setNtcList}
             TimeOverList={TimeOverList}
             setTimeOverList={setTimeOverList}
-            NotSolvedList={NotSolvedList}
-            setNotSolvedList={setNotSolvedList}
+            NotSolvedArr={NotSolvedArr}
+            setNotSolvedArr={setNotSolvedArr}
           />
         )}
         {SelectedTab === "풀이완료" && (
           <section className={SelectedTab}>
-            <List data={SolvedList} setList={setSolvedList} name="SolvedList" />
+            <SolvedList
+              data={SolvedArr}
+              setList={setSolvedArr}
+              name="SolvedArr"
+            />
           </section>
         )}
       </div>
