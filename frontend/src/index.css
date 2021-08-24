@@ -1,17 +1,17 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   position: fixed;
   width: 100%;
-  background: '#4D4ACF';
+  background: "#4D4ACF";
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
@@ -133,7 +133,7 @@ blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-  content: '';
+  content: "";
   content: none;
 }
 table {
@@ -152,12 +152,16 @@ input:focus {
 }
 
 /** custom **/
-.mylist{
+a {
+  text-decoration: none;
+  color: black;
+}
+.mylist {
   height: 90vh;
   overflow-y: scroll;
   scrollbar-width: none; /* Firefox */
 }
-.mylist::-webkit-scrollbar{
+.mylist::-webkit-scrollbar {
   width: 0;
   height: 0;
 }
@@ -332,7 +336,7 @@ header {
 
 /* My Problem list*/
 .mylist {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   background-color: #e0e0e0;
   border-radius: 17px;
   width: 80%;
@@ -387,10 +391,30 @@ header {
   color: #e0e0e0;
 }
 
-.mylist__nav .active{
+.mylist__nav .active {
   color: black;
 }
 
-.mylist_chartlink{
-  
+.mylist_chartlink {
+  display: flex;
+}
+
+.mylist_chartlink a {
+  align-self: flex-end;
+  padding-bottom: 4px;
+  font-weight: bold;
+}
+
+.unsolved__nav {
+  font-size: 32px;
+  line-height: 45px;
+  font-weight: bold;
+  background-color: transparent;
+  border-top: none;
+  border-width: 0px 0px 1px;
+  padding: 12px 24px;
+  margin-bottom: 24px;
+}
+
+.unsolved {
 }

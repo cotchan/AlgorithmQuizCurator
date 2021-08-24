@@ -1,7 +1,7 @@
-import {React, useEffect, useState} from "react";
-import {useDispatch} from "react-redux";
-import {getUnselectedQ} from "../../../_actions/ps_action";
-import {useCookies} from "react-cookie";
+import { React, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { getUnselectedQ } from "../../../_actions/ps_action";
+import { useCookies } from "react-cookie";
 import RandomPage from "../RandomPage/RandomPage";
 import RandomListPage from "../RandomListPage/RandomListPage";
 
@@ -9,7 +9,7 @@ function Landing(props) {
   const dispatch = useDispatch();
 
   const tag = "landing";
-  const {Plist, setPlist} = props;
+  const { Plist, setPlist } = props;
   const [IsEmpty, setIsEmpty] = useState(false);
   const [cookies, setCookie] = useCookies(["key"]);
 

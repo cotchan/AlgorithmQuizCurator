@@ -21,36 +21,42 @@ function Problem(props) {
     ? "백준"
     : "";
 
-    useEffect(()=>{
-      if(!quiz_state_type){
-        Object.entries(props.stateTypes).forEach(([key, value]) => {
-          if(value == quiz_state_code){
-            console.log("TYPE", key);
-            setState(key)
-          }
-        })
-        return;
-      }
-      setState(quiz_state_type)
-      
-    }, [props])
-  
+  useEffect(() => {
+    if (!quiz_state_type) {
+      Object.entries(props.stateTypes).forEach(([key, value]) => {
+        if (value === quiz_state_code) {
+          setState(key);
+        }
+      });
+      return;
+    }
+    setState(quiz_state_type);
+  }, [props]);
 
   const onChange = (e) => {
-    // console.log(tag, "onchange");
+    e.preventDefault();
     props.onChange(e.target.value, quiz_number);
   };
 
   return (
     <div
       className="problem"
-      style={{display: "flex", justifyContent: "space-between"}}
+      style={{ display: "flex", justifyContent: "space-between" }}
     >
       <a href={quiz_url}>{quiz_title}</a>
-      <div style={{display: "flex", marginRight: "43px"}}>
-        <select style={{width: "198px"}} onChange={onChange} value={state} defaultValue={state}>
+      <div style={{ display: "flex", marginRight: "43px" }}>
+        <select
+          style={{ width: "198px" }}
+          onChange={onChange}
+          value={state}
+          defaultValue={state}
+        >
           {Object.keys(props.stateTypes).map((type) => {
-            return <option key={quiz_number} value={type}>{type}</option>;
+            return (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            );
           })}
         </select>
 
