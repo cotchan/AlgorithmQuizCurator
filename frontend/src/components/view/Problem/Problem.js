@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 
 function Problem(props) {
   const tag = "Problem";
@@ -41,16 +41,11 @@ function Problem(props) {
   return (
     <div
       className="problem"
-      style={{ display: "flex", justifyContent: "space-between" }}
+      style={{display: "flex", justifyContent: "space-between"}}
     >
       <a href={quiz_url}>{quiz_title}</a>
-      <div style={{ display: "flex", marginRight: "43px" }}>
-        <select
-          style={{ width: "198px" }}
-          onChange={onChange}
-          value={state}
-          defaultValue={state}
-        >
+      <div style={{display: "flex", marginRight: "43px"}}>
+        <select style={{width: "198px"}} onChange={onChange} value={state}>
           {Object.keys(props.stateTypes).map((type) => {
             return (
               <option key={type} value={type}>

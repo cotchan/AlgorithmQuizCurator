@@ -6,3 +6,5 @@ export const DOUBLE_CHECK_ID = "doubleCheck_ID";
 export const DOUBLE_CHECK_NICK = "doubleCheck_NICK";
 export const GET_RANDOWMQ = "get_randomQ";
 export const GET_UNSELECTQ = "get_unselectedQ";
+export const CHANGE_STATE = "change_psState";
+export const GET_PSLIST = "get_psList";

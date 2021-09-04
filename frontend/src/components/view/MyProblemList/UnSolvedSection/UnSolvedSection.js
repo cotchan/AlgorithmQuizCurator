@@ -1,14 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import List from "../../List/List";
 
-function UnSolvedSection({
-  NotSolvedList,
-  NtcList,
-  TimeOverList,
-  setNotSolvedList,
-  setNtcList,
-  setTimeOverList,
-}) {
+function UnSolvedSection({NotSolvedList, NtcList, TimeOverList, setPsList}) {
   const tag = "UnSolvedSection";
   const [SelectedTab, setSelectedTab] = useState("일부 TC 미통과");
   const navList = ["일부 TC 미통과", "풀이 실패", "시간 초과"];
@@ -36,13 +29,13 @@ function UnSolvedSection({
       </div>
       <section className="unsolved">
         {SelectedTab === "일부 TC 미통과" && (
-          <List data={NtcList} setList={setNtcList} />
+          <List data={NtcList} setList={setPsList} />
         )}
         {SelectedTab === "풀이 실패" && (
-          <List data={NotSolvedList} setList={setNotSolvedList} />
+          <List data={NotSolvedList} setList={setPsList} />
         )}
         {SelectedTab === "시간 초과" && (
-          <List data={TimeOverList} setList={setTimeOverList} />
+          <List data={TimeOverList} setList={setPsList} />
         )}
       </section>
     </div>

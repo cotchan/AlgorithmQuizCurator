@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
+import React, {useEffect, useState} from "react";
+import {useCookies} from "react-cookie";
 import ProblemResetBtn from "../Problem/ProblemResetBtn";
 import axios from "axios";
+import {useDispatch} from "react-redux";
+import {changePsState} from "../../../_actions/ps_action";
 
-function SolvedList({ data = [], setList, name }) {
+function SolvedList({data = [], setList, setPsList}) {
   const tag = "SolvedList";
   const [Type, setType] = useState({});
   const [cookies, setCookie] = useCookies(["key"]);
+  const dispatch = useDispatch();
   const key = cookies.key;
 
   useEffect(() => {
@@ -18,68 +21,49 @@ function SolvedList({ data = [], setList, name }) {
 
       if (response.data.success) {
         response.data.response.forEach((type) => {
-          //수정 필요 key, value 바꾸기
           types[type.desc_kor] = type.state_code;
         });
         setType(types);
       }
-      console.log(types);
     });
   }, []);
 
-  const onClick = (removed) => {
-    //삭제
-    setList((prevlist) => {
-      //인덱스 찾기
-      //해당 인덱스 문제 삭제
-    });
-  };
+  const onClick = (quiz_number) => {
+    console.log(tag, "click");
 
-  const onChange = (nextstate, quiz_number) => {
-    console.log(tag, "onChange", nextstate, quiz_number);
-    setList((prevPlist) => {
-      return prevPlist.map((p) => {
+    //삭제
+    setPsList((prevPlist) => {
+      return prevPlist.map((p, index) => {
         if (p.quiz_number === quiz_number) {
-          return { ...p, quiz_state_type: nextstate };
+          return prevPlist.splice(index, 1);
         }
-        return { ...p };
+        return p;
       });
     });
 
-    let stateEnum = Type[nextstate];
-    console.log(tag, stateEnum);
     let body = {
       quiz_states: [
         {
           quiz_number: quiz_number,
-          state_type: stateEnum,
+          state_type: 0,
         },
       ],
     };
 
-    // console.log(body);
-
-    axios
-      .put("/api/problems/solved-check", body, {
-        headers: {
-          api_key: `Bearer ${key}`,
-        },
-      })
-      .then((response) => {
-        console.log(tag, "success", response);
-      });
+    dispatch(changePsState(body, key)).then(() => {
+      console.log(tag, "삭제 Success");
+    });
   };
 
   return (
-    <ul className="problemlist" style={{ width: "100%" }}>
+    <ul className="problemlist" style={{width: "100%"}}>
       {data.length <= 0
         ? ""
         : data.map((p) => (
-            <li key={`${p.quiz_number}${name}`}>
+            <li key={`${p.quiz_number}`}>
               <ProblemResetBtn
                 problem={p}
                 stateTypes={Type}
-                onChange={onChange}
                 onClick={onClick}
               />
             </li>

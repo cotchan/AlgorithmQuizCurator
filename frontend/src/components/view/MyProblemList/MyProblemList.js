@@ -1,82 +1,78 @@
-import React, { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
+import React, {useEffect, useState} from "react";
+import {useCookies} from "react-cookie";
 import axios from "axios";
-import { formatRelativeDate } from "../../../utils/format";
+import {getTotalList} from "../../../_actions/ps_action";
+import {TabType, TabLabel} from "../../../constants/tabs.js";
+import {formatRelativeDate} from "../../../utils/format";
 import charImg from "../../../img/chart.png";
 import List from "../List/List";
 import SolvedList from "../List/SolvedList";
 import UnSolvedSection from "./UnSolvedSection/UnSolvedSection";
+import {useDispatch} from "react-redux";
 
 function MyProblemList() {
   const tag = "MyProblemList";
   const [cookies, setCookie] = useCookies(["key"]);
   const key = cookies.key;
+  const dispatch = useDispatch();
 
   const [PsList, setPsList] = useState([]);
   const [SelectedTab, setSelectedTab] = useState("전체 목록");
 
-  /* state 별 분류*/
+  /* 문제 state 별 분류*/
   const [SolvedArr, setSolvedArr] = useState([]);
-  const [NotSolvedArr, setNotSolvedArr] = useState([]);
+  const [NotSolvedList, setNotSolvedList] = useState([]);
   const [NtcList, setNtcList] = useState([]);
   const [TimeOverList, setTimeOverList] = useState([]);
-
-  const navList = ["전체 목록", "풀이 미완료", "풀이완료"];
 
   /** 문제 목록 받아오기 */
   useEffect(() => {
     console.log(tag);
+    dispatch(getTotalList(key)).then((response) => {
+      const data = response.payload;
+      console.log();
+      if (data.success) {
+        setPsList(() => data.response);
+      }
+    });
+  }, [dispatch, key]);
 
-    axios
-      .get("/api/myPage/solved-problems/", {
-        headers: {
-          api_key: `Bearer ${key}`,
-        },
-      })
-      .then((response) => {
-        console.log(tag, response);
+  useEffect(() => {
+    console.log(tag, "list changed");
 
-        if (response.data.success) {
-          let fullList = response.data.response;
-          console.log("success", response.data.response);
-          /**
-           * todo : reg data 기준 정렬 추가
-           */
+    // todo (reducer로 처리)
+    const solvedArr = [];
+    const ntcList = [];
+    const timeOverList = [];
+    const notSolvedList = [];
 
-          // 전체 목록
-          const notSolvedArr = [];
-          const solvedArr = [];
-          const ntcList = [];
-          const timeOverList = [];
-
-          setPsList(fullList);
-          fullList.forEach((ps) => {
-            console.log("카테고리", ps.quiz_state_code);
-
-            switch (ps.quiz_state_code) {
-              case 2:
-                ntcList.push(ps);
-                break;
-              case 3:
-                notSolvedArr.push(ps);
-                break;
-              case 4:
-                timeOverList.push(ps);
-                break;
-              case 5:
-                solvedArr.push(ps);
-                break;
-              default:
-            }
-          });
-
-          setSolvedArr(timeOverList); //임시
-          setNotSolvedArr(notSolvedArr);
-          setNtcList(ntcList);
-          setTimeOverList(timeOverList);
-        }
-      });
-  }, []);
+    if (PsList.length === 0) {
+      return;
+    }
+    PsList.forEach((ps) => {
+      switch (ps.quiz_state_code) {
+        case 2:
+          ntcList.push(ps);
+          break;
+        case 3:
+          notSolvedList.push(ps);
+          break;
+        case 4:
+          timeOverList.push(ps);
+          break;
+        case 5:
+          console.log("solved", ps);
+          solvedArr.push(ps);
+          break;
+        default:
+      }
+    });
+    console.log("solvedArr", solvedArr);
+    setSolvedArr(solvedArr); //임시
+    setNotSolvedList(notSolvedList);
+    setNtcList(ntcList);
+    setTimeOverList(timeOverList);
+  }, [PsList]);
 
   const onClick = (tabType) => {
     setSelectedTab(tabType);
@@ -94,7 +90,7 @@ function MyProblemList() {
             </div>
           </div>
           <ul className="mylist__nav">
-            {navList.map((tabType) => (
+            {Object.values(TabLabel).map((tabType) => (
               <li
                 key={tabType}
                 className={SelectedTab === tabType ? "active" : ""}
@@ -105,27 +101,25 @@ function MyProblemList() {
             ))}
           </ul>
         </div>
-        {SelectedTab === "전체 목록" && (
+        {SelectedTab === TabType.TOTAL && (
           <section className={SelectedTab}>
             <List data={PsList} setList={setPsList} name="FullList" />
           </section>
         )}
-        {SelectedTab === "풀이 미완료" && (
+        {SelectedTab === TabType.UNSOLVED && (
           <UnSolvedSection
             NtcList={NtcList}
-            setNtcList={setNtcList}
             TimeOverList={TimeOverList}
-            setTimeOverList={setTimeOverList}
-            NotSolvedArr={NotSolvedArr}
-            setNotSolvedArr={setNotSolvedArr}
+            NotSolvedList={NotSolvedList}
+            setPsList={setPsList}
           />
         )}
-        {SelectedTab === "풀이완료" && (
+        {SelectedTab === TabType.SOLVED && (
           <section className={SelectedTab}>
             <SolvedList
               data={SolvedArr}
               setList={setSolvedArr}
-              name="SolvedArr"
+              setPsList={setPsList}
             />
           </section>
         )}

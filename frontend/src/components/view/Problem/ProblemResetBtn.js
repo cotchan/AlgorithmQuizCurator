@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import resetBtn from "../../../img/resetBtn.png";
 
 function ProblemResetBtn(props) {
@@ -21,6 +21,10 @@ function ProblemResetBtn(props) {
   const quiz_desc = quiz_url_desc.includes("Baekjoon Online Judge")
     ? "백준"
     : "";
+  const onClick = (e) => {
+    e.preventDefault();
+    props.onClick(quiz_number);
+  };
 
   useEffect(() => {
     if (!quiz_state_type) {
@@ -41,30 +45,19 @@ function ProblemResetBtn(props) {
 
   return (
     <div
-      className="problem"
-      style={{ display: "flex", justifyContent: "space-between" }}
+      className="problem reset"
+      style={{display: "flex", justifyContent: "space-between"}}
     >
-      <div>
-        <img src={resetBtn} alt="reset-btn" style={{ width: "60px" }}></img>
-        <a href={quiz_url}>{quiz_title}</a>
-      </div>
+      <img
+        src={resetBtn}
+        alt="reset-btn"
+        style={{width: "60px", marginLeft: "24px"}}
+        onClick={onClick}
+      ></img>
 
-      <div style={{ display: "flex", marginRight: "43px" }}>
-        <select
-          style={{ width: "198px" }}
-          onChange={onChange}
-          value={state}
-          defaultValue={state}
-        >
-          {Object.keys(props.stateTypes).map((type) => {
-            return (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            );
-          })}
-        </select>
+      <a href={quiz_url}>{quiz_title}</a>
 
+      <div style={{display: "flex", marginRight: "43px"}}>
         <div className="psinfo quiz_level">{quiz_level}</div>
         <div className="psinfo quiz_url_desc">{quiz_desc}</div>
       </div>
