@@ -33,12 +33,13 @@ function SolvedList({data = [], setList, setPsList}) {
 
     //삭제
     setPsList((prevPlist) => {
-      return prevPlist.map((p, index) => {
-        if (p.quiz_number === quiz_number) {
-          return prevPlist.splice(index, 1);
+      for (let i = 0; i < prevPlist.length; i++) {
+        if (prevPlist[i].quiz_number === quiz_number) {
+          prevPlist.splice(i, 1);
+          return prevPlist;
         }
-        return p;
-      });
+      }
+      return prevPlist;
     });
 
     let body = {

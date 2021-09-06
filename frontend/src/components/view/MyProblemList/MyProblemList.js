@@ -86,7 +86,7 @@ function MyProblemList() {
             <h1>나의 문제 목록</h1>
             <div className="mylist_chartlink">
               <img alt="chart-icon" src={charImg}></img>
-              <a href="/">차트로 파악하기</a>
+              <a href="/mychart">차트로 파악하기</a>
             </div>
           </div>
           <ul className="mylist__nav">

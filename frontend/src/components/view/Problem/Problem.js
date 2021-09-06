@@ -15,11 +15,12 @@ function Problem(props) {
   } = props.problem;
 
   /**
+   * 라벨링
    * 임시 코드
    */
-  const quiz_desc = quiz_url_desc.includes("Baekjoon Online Judge")
-    ? "백준"
-    : "";
+
+  // const quiz_desc = quiz_url_desc.includes("Baekjoon") ? "백준" : "";
+  const quiz_desc = "백준";
 
   useEffect(() => {
     if (!quiz_state_type) {
